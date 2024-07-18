@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const connectString = process.env.MONGODB_URI;
+const connectString = process.env.MONGO_URI;
 
 class Database {
    constructor() {

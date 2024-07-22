@@ -1,4 +1,4 @@
-// File: D:\workspace\website-quan-ly-quan-nuoc\client\src\app\TablePage\page.js
+// File: D:\Workspace\Code\quan-ly-quan-nuoc\client\src\app\TablePage\page.js
 import * as entry from '../../../../src/app/TablePage/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

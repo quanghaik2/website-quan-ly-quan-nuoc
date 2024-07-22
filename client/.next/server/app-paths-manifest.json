@@ -1,5 +1,4 @@
 {
   "/TablePage/page": "app/TablePage/page.js",
-  "/TableManager/page": "app/TableManager/page.js",
-  "/login/page": "app/login/page.js"
+  "/TableManager/page": "app/TableManager/page.js"
 }

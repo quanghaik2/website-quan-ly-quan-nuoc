@@ -13,13 +13,8 @@ const orderSchema = new Schema(
       note: {
          type: String,
       },
-<<<<<<< HEAD
       products: [
         {
-=======
-      product: [
-         {
->>>>>>> d875341adfe8920be19979af26deb26254ce3d70
             productId: {
                type: Schema.Types.ObjectId,
                ref: 'Product',

@@ -1,4 +1,5 @@
 {
-  "/page": "app/page.js",
+  "/CreateProduct/page": "app/CreateProduct/page.js",
+  "/ProductManager/page": "app/ProductManager/page.js",
   "/TableManager/page": "app/TableManager/page.js"
 }

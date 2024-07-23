@@ -6,7 +6,7 @@ import ProductList from './page';
 
 export default function Home() {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto bg-white">
       <Head>
         <title>Product Layout</title>
         <meta name="description" content="Table layout with Next.js and Tailwind CSS" />
@@ -19,14 +19,6 @@ export default function Home() {
             <button className='bg-green-700 mx-1 my-3 px-4 py-2 rounded-lg text-white'><a className='flex items-center' href='/CreateProduct'>Thêm Sản phẩm <FaPlus className='ml-1'/></a></button>            
         </div>
         <div className=' mt-10 border-blue-300 border-2 rounded-xl bg-white' >
-            <ul className='flex  text-black justify-around font-bold'>
-                <li>STT</li>
-                <li>Tên món</li>
-                <li>Giá</li>
-                <li>Loại</li>
-                <li>Trạng thái</li>
-                <li> </li>
-            </ul>
             <ProductList/>
         </div>
       </main>

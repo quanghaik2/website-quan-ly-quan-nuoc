@@ -12,7 +12,7 @@ const TableList = () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/table`);
         if (!response.ok) {
-          toast.error('Lấy sản phẩm thất bại:', error);
+          toast.error('Lấy bàn thất bại:', error);
         }
         const data = await response.json();
         console.log(data);

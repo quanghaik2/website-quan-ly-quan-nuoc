@@ -26,7 +26,7 @@ class Product {
             
             const product = await models.product.find();
             
-            if(product) {
+            if(!product) {
                 return res.status(400).json({
                     message: 'chưa có sản phẩm nào được tạo',
                 })

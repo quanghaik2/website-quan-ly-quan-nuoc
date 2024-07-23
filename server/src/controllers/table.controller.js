@@ -5,33 +5,43 @@ class Table {
     createTable = async (req,res,next) => {
         try {
             const {tableName} = req.body;
-            if(!tableName) 
-                throw new Error({
-                    statusCode: 400,
-                    message: 'Missing required fields',
-                 })
+            if(!tableName) {
+                return res.status(400).json({message: 'Chưa nhập giá trị sao tôi thêm được'});
+            }
+               
             console.log(tableName)
             const table = await models.table.findOne({tableName: tableName});
             
             if(table) {
-                throw new Error({
-                    statusCode: 400,
-                    message: 'Table already exists',
-                 })
+                return res.status(400).json({message: 'Bàn đã tồn tại'});
             }
             const newTable = new models.table({tableName});
                 await newTable.save();
-                return res.status(200).json({message: 'Create table successfully',newTable});
-            
-                
-            
-            
+                return res.status(200).json({message: 'Thêm bàn thành công',newTable});   
         } catch (error) {
          next(error);   
         }
     };
 
-    
+    getAll = async (req, res, next) => {
+        try {
+            
+            const table = await models.table.find();
+            
+            if(!table) {
+                return res.status(400).json({
+                    message: 'chưa có bàn nào được tạo',
+                })
+            }
+            
+            return res.status(200).json({
+                message: 'Lấy bàn thành công',
+                table
+            })
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 module.exports = new Table();

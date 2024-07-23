@@ -18,10 +18,10 @@ const ProductList= () => {
             key={table.id}
             className={`p-4 size-full ${
               table.id % 2 === 0 ? 'bg-white' : 'bg-pink-50'
-            } text-black flex justify-between items-center`}
+            } text-black flex justify-between items-center `}
           >
             {table.name}
-            <div className='flex'>
+            <div className=' flex'>
                 <FaPen/> 
                 <MdDeleteForever/>
             </div>

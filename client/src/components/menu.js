@@ -30,10 +30,12 @@ const Menu = () => {
     e.stopPropagation();
   };
 
+
+
   return (
     <div className={`bg-gray-800 min-h-screen ${collapsed ? 'w-20' : 'w-64'} transition-all duration-300`}>
       <button onClick={toggleCollapse} className="text-white p-4 focus:outline-none">
-        {collapsed ?  <IoCloseSharp className='w-10 h-10'/> : <IoMenu className='w-10 h-10 self-end'/> }
+        {collapsed ?   <IoMenu className='w-10 h-10 self-end'/> : <IoCloseSharp className='w-10 h-10'/> }
       </button>
       <div className="p-4">
         <div
@@ -55,26 +57,26 @@ const Menu = () => {
           <TbTableAlias className='mr-1'/>
             {!collapsed && <a href='/TableManager'>Quản lý bàn</a>}
           </div>
-          {selectedMenu === 'ban' && (
+          {/* {selectedMenu === 'ban' && (
             <div className="ml-8 mt-2">
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'them-ban' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'them-ban')}>Thêm bàn</div>
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'sua-ban' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'sua-ban')}>Sửa bàn</div>
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'xoa-ban' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'xoa-ban')}>Xóa bàn</div>
             </div>
-          )}
+          )} */}
         </div>
         <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-san-pham'); toggleSubMenu('sanpham'); }}>
           <div className={`flex px-3 py-3 rounded-xl items-center ${activeItem === 'quan-ly-san-pham' ? 'bg-blue-500' : ''}`}>
             <RiDrinksFill className='mr-1'/>
-            {!collapsed && 'Quản lý sản phẩm'}
+            {!collapsed && <a href='/ProductManager'>Quản lý sản phẩm</a>}
           </div>
-          {selectedMenu === 'sanpham' && (
+          {/* {selectedMenu === 'sanpham' && (
             <div className="ml-8 mt-2">
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'them-san-pham' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'them-san-pham')}>Thêm sản phẩm</div>
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'sua-san-pham' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'sua-san-pham')}>Sửa sản phẩm</div>
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'xoa-san-pham' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'xoa-san-pham')}>Xóa sản phẩm</div>
             </div>
-          )}
+          )} */}
         </div>
         <div
           className={`text-white mb-6 flex items-center cursor-pointer ${activeItem === 'thong-ke' ? 'bg-blue-500' : ''}`}

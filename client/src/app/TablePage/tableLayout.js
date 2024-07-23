@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 
 const tables = Array.from({ length: 34 }, (_, index) => ({

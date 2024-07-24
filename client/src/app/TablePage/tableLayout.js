@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import React from 'react'
+=======
+"use client"
+import React from 'react';
+>>>>>>> 0f57d00005f6254e0877e5c4d67a1f8809a95d51
 
 const tables = Array.from({ length: 34 }, (_, index) => ({
    id: index + 1,

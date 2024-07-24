@@ -1,6 +1,8 @@
+
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Menu from "@/components/menu";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,7 +15,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+<<<<<<< HEAD
       <div className="flex">
+=======
+      <Toaster position="top-right" richColors/>
+      <div className="flex">    
+>>>>>>> 0f57d00005f6254e0877e5c4d67a1f8809a95d51
       <Menu/>
       {children}
       </div>

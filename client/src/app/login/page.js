@@ -1,18 +1,67 @@
 'use client'
 import Head from 'next/head';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [message, setMessage] = useState('');
+  const [auth, setAuth] = useState(true);
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    let formErrors = { email: '', password: '' };
+    let isValid = true;
+
+    if (!email) {
+      formErrors.email = 'Email không được để trống';
+      isValid = false;
+    }
+
+    if (!password) {
+      formErrors.password = 'Mật khẩu không được để trống';
+      isValid = false;
+    } else if (password.length < 8) {
+      formErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+      isValid = false;
+    }
+
+    setErrors(formErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
+    if (validateForm()) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data) {
+          setMessage('Đăng nhập thành công');
+          router.push('/');
+        } else {
+          setMessage(data.message || 'Đăng nhập thất bại');
+          setAuth(false);
+        }
+      } catch (error) {
+        setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+      }
+    }
   };
 
   return (
-    <div className="w-full flex items-center justify-center min-h-screen bg-[#dce0e8] ">
+    <div className="w-full flex items-center justify-center min-h-screen bg-[#dce0e8] text-black ">
       <Head>
         <title>Login</title>
         <meta name="description" content="Login page using Next.js and Tailwind CSS" />
@@ -28,13 +77,16 @@ export default function Login() {
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
-              type="email"
+              
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="block w-full px-4 py-2 mt-1 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
               required
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
@@ -46,6 +98,9 @@ export default function Login() {
               className="block w-full px-4 py-2 mt-1 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
               required
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
           <div>
             <button
@@ -55,6 +110,9 @@ export default function Login() {
               Đăng nhập
             </button>
           </div>
+          {message && (
+            <p className={`text-xs mt-1 ${auth ? 'text-green-500' : 'text-red-500'}`}>{message}</p>
+          )}
         </form>
       </div>
     </div>

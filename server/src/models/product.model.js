@@ -13,8 +13,8 @@ const productSchema = new Schema(
       category: {
         type: String,
         required: true,
-        default: 'đồ uống',
-        enum: ['đồ uống', "đồ ăn vặt"],
+        default: 'Đồ uống',
+        enum: ['Đồ uống', "Đồ ăn vặt"],
       },
       status: {
          type: Boolean,

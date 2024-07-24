@@ -1,7 +1,17 @@
-const productController = require('../controllers/product.controller')
+const productController = require('../controllers/product.controller');
 
-const router = require('express').Router()
+const router = require('express').Router();
 
+// Route để lấy danh sách sản phẩm
+router.get('/', productController.getAll);
+
+// Route để tạo sản phẩm mới
 router.post('/create', productController.createProduct);
 
-module.exports = router
+// Route để cập nhật thông tin sản phẩm theo ID
+router.put('/update/:id', productController.updateProduct);
+
+// Route để xóa sản phẩm theo ID
+router.delete('/delete/:id', productController.deleteProduct);
+
+module.exports = router;

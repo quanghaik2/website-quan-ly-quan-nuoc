@@ -80,6 +80,26 @@ class Product {
             next(error);
         }
     };
+
+    getProduct = async (req, res, next) => {
+        try {
+
+            const product = await models.product.findById(req.query.id);
+            
+            if(!product) {
+                return res.status(400).json({
+                    message: 'chưa có sản phẩm này hoặc đã bị xóa',
+                })
+            }
+
+            return res.status(200).json({
+                message: 'Lấy sản phẩm thành công',
+                product
+            })
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 module.exports = new Product();

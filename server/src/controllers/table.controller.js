@@ -52,13 +52,11 @@ class Table {
         try {
             const { id } = req.params;
 
-            const table = await models.table.findById(id);
+            const table = await models.table.findByIdAndDelete(id);
 
             if (!table) {
                 return res.status(404).json({ message: 'Bàn không tồn tại' });
             }
-
-            await table.remove();
 
             return res.status(200).json({ message: 'Xóa bàn thành công' });
         } catch (error) {

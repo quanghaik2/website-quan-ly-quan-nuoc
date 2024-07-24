@@ -30,6 +30,20 @@ class Order{
             next(error);
         }
     }
+    getOrder = async (req, res, next) => {
+        try {
+            const id =  req.params.id
+            if (!id) throw new Error('Missing required fields')
+            
+            const order = models.order.findById(id).exec()
+            return res.status(200).json({
+                message: "",
+                data: order
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = new Order();

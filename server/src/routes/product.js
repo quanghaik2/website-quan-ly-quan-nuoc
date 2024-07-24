@@ -5,6 +5,9 @@ const router = require('express').Router();
 // Route để lấy danh sách sản phẩm
 router.get('/', productController.getAll);
 
+// Route để lấy theo id sản phẩm
+router.get('/getProduct', productController.getProduct);
+
 // Route để tạo sản phẩm mới
 router.post('/create', productController.createProduct);
 

@@ -1,11 +1,10 @@
 'use client'
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation'
 
-export default function UpdateProduct() {
+export default function EditProductLayout() {
     const [productName, setProductName] = useState('');
     const [price, setProductPrice] = useState('');
     const [image, setImage] = useState('');
@@ -14,20 +13,22 @@ export default function UpdateProduct() {
     const [errors, setErrors] = useState({});
     const router = useRouter();
     const productTypes = ['Đồ uống', 'Đồ ăn vặt'];
+    const id = searchParams.get('id');
 
     useEffect(() => {
         const fetchProducts = async () => {
           try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product`);
-            if (!response.ok) {
-              toast.error('Lấy sản phẩm thất bại:', error);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/getProduct?id=${id}`);
+            if (response.status !=200) {
+              toast.error('Lấy sản phẩm thất bại:');
             }
             const data = await response.json();
-            setProductName(data.productName);
-            setProductPrice(data.price);
-            setImage(data.image);
-            setCategory(data.category);// Assuming the API response is an array of products
-            console.log(products);
+            console.log(data);
+            setProductName(data.product.productName);
+            setProductPrice(data.product.price);
+            setImage(data.product.image);
+            setCategory(data.product.category);// Assuming the API response is an array of products
+            
           } catch (error) {
             toast.error('Error fetching products:', error);
           }
@@ -44,7 +45,7 @@ export default function UpdateProduct() {
     const price = formData.get('price');
     const category = formData.get('category');
     const image = formData.get('image');
-    const id = searchParams.get('id');
+    
 
 
     // Clear previous errors
@@ -52,8 +53,8 @@ export default function UpdateProduct() {
 
     // Validation
     const newErrors = {};
-    if (!/^[A-ZĐ][a-z]/.test(productName)) {
-      newErrors.productName = 'Tên sản phẩm không được bắt đầu bằng số hoặc ký tự đặc biệt';
+    if (!productName) {
+      newErrors.productName = 'Tên sản phẩm không được để trống';
     }
     if (!/^\d+$/.test(price)) {
       newErrors.price = 'Giá sản phẩm phải là số';
@@ -84,7 +85,7 @@ export default function UpdateProduct() {
       console.log(id);
 
       if (response.status  === 200) {
-        toast.success('Thêm sản phẩm thành công');
+        toast.success('Sửa sản phẩm thành công');
         router.push('/ProductManager');
       } else {
         toast.error(data.message || 'Thêm sản phẩm thất bại');
@@ -106,6 +107,7 @@ export default function UpdateProduct() {
               name='productName'
               type="text"
               value={productName}
+              onChange={(e)=> setProductName(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.productName && (
@@ -118,6 +120,7 @@ export default function UpdateProduct() {
               name='price'
               type="number"
               value={price}
+              onChange={(e)=> setProductPrice(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.price && (
@@ -130,6 +133,7 @@ export default function UpdateProduct() {
               name='image'
               type="text"
               value={image}
+              onChange={(e)=> setImage(e.target.value)}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.image && (
@@ -141,6 +145,7 @@ export default function UpdateProduct() {
             <select
                 name='category'
                 value={category}
+                onChange={(e)=> setCategory(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-black"
             >
               <option value="" disabled>Chọn loại sản phẩm</option>

@@ -2,7 +2,7 @@ import Head from 'next/head';
 import TableLayout from './tableLayout';
 import NavigationCustom from '@/components/navigate';
 
-export default function Home() {
+export default function ListTablePage() {
   return (
     <div className="container mx-auto">
       <Head>

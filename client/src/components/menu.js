@@ -50,7 +50,7 @@ const Menu = () => {
           onClick={() => handleItemClick('danh-sach-don')}
         >
           <ImTable2 className='mr-1'/>
-          {!collapsed && 'Danh sách đơn'}
+          {!collapsed && <a href='/OrderManager'>Quản lý đơn</a>}
         </div>
         <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-ban'); toggleSubMenu('ban'); }}>
           <div className={`flex  px-3 py-3 rounded-xl items-center ${activeItem === 'quan-ly-ban' ? 'bg-blue-500' : ''}`}>

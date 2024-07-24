@@ -1,5 +1,4 @@
 {
-  "/CreateProduct/page": "app/CreateProduct/page.js",
-  "/ProductManager/page": "app/ProductManager/page.js",
-  "/TableManager/page": "app/TableManager/page.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/ProductManager/page": "app/ProductManager/page.js"
 }

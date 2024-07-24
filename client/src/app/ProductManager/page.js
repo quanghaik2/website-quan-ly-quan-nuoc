@@ -20,6 +20,7 @@ const ProductList= () => {
         const data = await response.json();
         console.log(data);
         setProducts(data.product); // Assuming the API response is an array of products
+        console.log(products);
       } catch (error) {
         toast.error('Error fetching products:', error);
       }
@@ -51,7 +52,7 @@ const ProductList= () => {
                   <td className=' px-4 py-2 text-center'>{product.productName}</td>
                   <td className=' px-4 py-2 text-center'>{product.price}</td>
                   <td className=' px-4 py-2 text-center flex justify-center'>
-                    <FaPen className='text-green-500 cursor-pointer' />
+                    <a href={`/EditProduct?id=${product._id}`}><FaPen className='text-green-500 cursor-pointer' /></a>
                     <MdDeleteForever className='text-red-500 ml-1 cursor-pointer' />
                   </td>
                 </tr>

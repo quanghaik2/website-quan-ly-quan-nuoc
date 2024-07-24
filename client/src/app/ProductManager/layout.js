@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { FaPlus } from "react-icons/fa6";
-import TableList from './page';
 import ProductList from './page';
 
 

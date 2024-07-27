@@ -1,10 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation'
 
-export default function EditProductLayout() {
+const EditProduct = () => {
     const [productName, setProductName] = useState('');
     const [price, setProductPrice] = useState('');
     const [image, setImage] = useState('');
@@ -168,3 +168,10 @@ export default function EditProductLayout() {
   );
 }
 
+const EditProductPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EditProduct />
+  </Suspense>
+);
+
+export default EditProductPage;

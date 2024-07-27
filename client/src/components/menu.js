@@ -1,34 +1,35 @@
-"use client"
+'use client'
 
-import React, { useState } from 'react';
-import { MdOutlineTableRestaurant } from "react-icons/md";
-import { ImTable2 } from "react-icons/im";
-import { TbTableAlias, TbReportMoney } from "react-icons/tb";
-import { IoMenu, IoCloseSharp } from "react-icons/io5";
-import { RiDrinksFill } from "react-icons/ri";
+import React, { useState } from 'react'
+import { MdOutlineTableRestaurant } from 'react-icons/md'
+import { ImTable2 } from 'react-icons/im'
+import { TbTableAlias, TbReportMoney } from 'react-icons/tb'
+import { IoMenu, IoCloseSharp } from 'react-icons/io5'
+import { RiDrinksFill } from 'react-icons/ri'
+import { IoIosHome } from "react-icons/io"; 
 
 const Menu = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState(null);
-  const [activeItem, setActiveItem] = useState(null); // State để theo dõi mục được chọn
+   const [collapsed, setCollapsed] = useState(false)
+   const [selectedMenu, setSelectedMenu] = useState(null)
+   const [activeItem, setActiveItem] = useState(null) // State để theo dõi mục được chọn
 
-  const toggleCollapse = () => {
-    setCollapsed(!collapsed);
-  };
+   const toggleCollapse = () => {
+      setCollapsed(!collapsed)
+   }
 
-  const toggleSubMenu = (menu) => {
-    setSelectedMenu(selectedMenu === menu ? null : menu);
-  };
+   
+   const toggleSubMenu = (menu) => {
+      setSelectedMenu(selectedMenu === menu ? null : menu)
+   }
 
-  const handleItemClick = (item) => {
-    setActiveItem(item);
-  };
+   const handleItemClick = (item) => {
+      setActiveItem(item)
+   }
 
-  const handleSubItemClick = (e, item) => {
-    
-    setActiveItem(item);
-    e.stopPropagation();
-  };
+   const handleSubItemClick = (e, item) => {
+      setActiveItem(item)
+      e.stopPropagation()
+   }
 
 
 
@@ -42,8 +43,8 @@ const Menu = () => {
           className={`text-white mb-6 flex items-center px-3 py-3 rounded-xl cursor-pointer ${activeItem === 'danh-sach-ban' ? 'bg-blue-500' : ''}`}
           onClick={() => handleItemClick('danh-sach-ban')}
         >
-          <MdOutlineTableRestaurant className='mr-1'/>
-          {!collapsed && <a href='/TablePage'>Danh Sách bàn</a>}
+          <IoIosHome className='mr-1'/>
+          {!collapsed && <a href='/'>Trang chủ</a>}
         </div>
         <div
           className={`text-white mb-6 flex items-center  px-3 py-3 rounded-xl cursor-pointer ${activeItem === 'danh-sach-don' ? 'bg-blue-500' : ''}`}
@@ -86,10 +87,8 @@ const Menu = () => {
           {!collapsed && 'Thống kê'}
         </div>
       </div>
-    </div>
-  );
-};
+   </div>
+   )
+}
 
-export default Menu;
-
-
+export default Menu

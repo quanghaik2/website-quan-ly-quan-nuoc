@@ -77,7 +77,7 @@ const ProductList = () => {
                   </td>
                   <td className='px-4 py-2 text-center'>{product.productName}</td>
                   <td className='px-4 py-2 text-center'>{product.price}</td>
-                  <td className='px-4 py-2 text-center flex justify-center'>
+                  <td className='px-4 py-2 flex justify-center items-center'>
                     <a href={`/EditProduct?id=${product._id}`}><FaPen className='text-green-500 cursor-pointer' /></a>
                     <button onClick={() => handleShowFormDelete(product._id)}>
                       <MdDeleteForever className='text-red-500 ml-1 cursor-pointer' />

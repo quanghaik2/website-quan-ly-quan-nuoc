@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-export default function CreateTable({ onClose }) {
+export default function CreateTable({ onClose , onCreateSuccess}) {
   const formRef = useRef(null);
   const router = useRouter();
   const [errors, setErrors] = useState({});
@@ -35,7 +35,7 @@ export default function CreateTable({ onClose }) {
 
       if (response.status  === 200) {
         toast.success('Thêm bàn thành công');
-        router.push('/TableManager');
+        onCreateSuccess();
       } else {
         toast.error(data.message || 'Thêm bàn thất bại');
       }

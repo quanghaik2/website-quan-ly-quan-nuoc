@@ -27,7 +27,7 @@ export default function AddProduct() {
 
     // Validation
     const newErrors = {};
-    if (!/^[A-ZĐ][a-z]/.test(productName)) {
+    if (!/^[A-ZĐÉ][a-z]/.test(productName)) {
       newErrors.productName = 'Tên sản phẩm không được bắt đầu bằng số hoặc ký tự đặc biệt';
     }
     if (!/^\d+$/.test(price)) {

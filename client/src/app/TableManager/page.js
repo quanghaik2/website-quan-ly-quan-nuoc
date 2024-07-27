@@ -72,7 +72,7 @@ const TableList = () => {
                   <td className=' px-4 py-2 text-center'>{index + 1}</td>
                   <td className=' px-4 py-2 text-center'>{table.tableName}</td>
                   <td className=' px-4 py-2 text-center'>{table.status === false ? 'Còn trống' : 'Đang sử dụng'}</td>
-                  <td className=' px-4 py-2 text-center flex justify-center'>
+                  <td className=' px-4 py-2 flex justify-center items-center'>
                     <FaPen className='text-green-500 cursor-pointer' />
                     <button onClick={() => handleShowFormDelete(table._id)}>
                       <MdDeleteForever className='text-red-500 ml-1 cursor-pointer' />

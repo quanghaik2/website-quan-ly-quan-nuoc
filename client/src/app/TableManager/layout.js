@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react';
-import Head from 'next/head';
 import { FaPlus } from "react-icons/fa6";
 import TableList from './page';
 import CreateTable from '@/components/createTable1';
@@ -16,11 +15,17 @@ export default function TableManagerLayout() {
   const handleCloseCreateTable = () => {
     setShowCreateTable(false);
   };
+
+  const handleCreateSuccess = () => {
+    setShowCreateTable(false);  
+  };
   return (
     <div className="container mx-auto bg-white">
       <div className='bg-slate-200 relative '  >
         {showCreateTable && (<div className="absolute inset-0">
-          <CreateTable onClose={handleCloseCreateTable}/>
+          <CreateTable 
+            onClose={handleCloseCreateTable}
+            onCreateSuccess={handleCreateSuccess}/>
         </div>)}
         <div className='flex justify-around items-center'>
             <h1 className='text-3xl font-bold text-black'>Quản lý Bàn</h1>

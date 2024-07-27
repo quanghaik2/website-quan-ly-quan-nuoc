@@ -11,6 +11,16 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/TableManager/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/TableManager/page.js"
+    ],
+    "/TableManager/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/TableManager/layout.js"
+    ],
     "/OrderManager/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -20,6 +30,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/OrderManager/layout.js"
+    ],
+    "/CreateOrder/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/CreateOrder/page.js"
     ]
   }
 }

@@ -6,6 +6,17 @@ const Statistics = () => {
   const [orders, setOrders] = useState([]);
   const [startDate, setStartDate] = useState('2024-07-01'); // Điều chỉnh theo nhu cầu
   const [endDate, setEndDate] = useState('2024-07-31'); // Điều chỉnh theo nhu cầu
+  
+  
+  const convertDate = (dateString) => {
+    const date = new Date(dateString);
+ 
+    const year = date.getFullYear().toString().slice(-2); // Lấy 2 chữ số cuối của năm
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Thêm 1 vì getMonth() trả về giá trị từ 0-11
+    const day = date.getDate().toString().padStart(2, '0'); // Thêm '0' nếu ngày có 1 chữ số
+ 
+    return `${year}/${month}/${day}`;
+ }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,17 +89,26 @@ const Statistics = () => {
       <table className="min-w-full bg-white border border-gray-200 rounded-md shadow-md">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Tháng</th>
-            <th className="py-2 px-4 border-b">Số Đơn</th>
-            <th className="py-2 px-4 border-b">Tổng Doanh Thu</th>
+            <th className="py-2 px-4 border-b">STT</th>
+            <th className="py-2 px-4 border-b">Ngày bán</th>
+            <th className="py-2 px-4 border-b">Tổng tiền của đơn</th>
           </tr>
         </thead>
+        {orders.map((order, index) => (
+          <tbody>
+            <tr>
+              <th className="py-2 px-4 font-mono">{index+1}</th>
+              <th className="py-2 px-4 font-mono">{convertDate(order.orderDate)}</th>
+              <th className="py-2 px-4 font-mono">{order.total_amount} </th>
+            </tr>
+          </tbody>
+        ))}
         <tbody>
           {Object.entries(monthlyStats).map(([monthYear, stats]) => (
             <tr key={monthYear}>
-              <td className="py-2 px-4 border-b">{monthYear}</td>
-              <td className="py-2 px-4 border-b">{stats.orderCount}</td>
-              <td className="py-2 px-4 border-b">{stats.totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
+              <td className="py-2 px-4 border-b"> </td>
+              <td className="py-2 px-4 border-b">Đơn trong tháng: {stats.orderCount}</td>
+              <td className="py-2 px-4 border-b"><span className='mr-1'>Tổng doanh thu:</span> {stats.totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
             </tr>
           ))}
         </tbody>

@@ -1,7 +1,4 @@
 {
-  "/page": "app/page.js",
-  "/CreateOrder/page": "app/CreateOrder/page.js",
-  "/UpdateOrder/page": "app/UpdateOrder/page.js",
-  "/TableManager/page": "app/TableManager/page.js",
-  "/OrderManager/page": "app/OrderManager/page.js"
+  "/login/page": "app/login/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

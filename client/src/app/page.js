@@ -8,25 +8,25 @@ import { toast } from 'sonner';
 
 export default function Home() {
 
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product`);
-      if (response.status !== 200) {
-        toast.error('Lấy sản phẩm thất bại');
-        return;
-      }
-      const data = await response.json();
-      setProducts(data.product); 
-    } catch (error) {
-      toast.error('Error fetching products:', error);
-    }
-  };
+  // const fetchProducts = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product`);
+  //     if (response.status !== 200) {
+  //       toast.error('Lấy sản phẩm thất bại');
+  //       return;
+  //     }
+  //     const data = await response.json();
+  //     setProducts(data.product); 
+  //   } catch (error) {
+  //     toast.error('Error fetching products:', error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
 
 
 

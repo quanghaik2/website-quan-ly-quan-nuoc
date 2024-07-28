@@ -19,6 +19,8 @@ const UpdateOrder = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [showFormDelete, setShowFormDelete] = useState(false);
   const [status, setStatus] = useState('');
+  const [listTableOff, setListTableOff] = useState([]);
+  const [tableDefault, setTableDefault] = useState('');
 
 
   useEffect(() => {
@@ -26,10 +28,14 @@ const UpdateOrder = () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/${orderId}`);
         const data = await response.json();
+        const response2 = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/table/getTablesOff`);
+        const dataTablesOff = await response2.json();
+        setListTableOff(dataTablesOff.table);
 
-        if (response.ok) {
+
+        if (response.status  === 200) {
           setTableName(data.order.tableId.tableName);
-          
+          setTableDefault(data.order.tableId.tableName);
           setProducts(data.order.products.map(product => ({
             id: product.productId,
             name: product.nameProduct,
@@ -112,6 +118,7 @@ const UpdateOrder = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
+          tableName,
           note,
           products: products.map(product => ({
             productId: product.id,
@@ -171,13 +178,17 @@ const UpdateOrder = () => {
       <form onSubmit={handleSubmit} className="p-6">
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 ">Tên Bàn</label>
-          <input
-            type="text"
-            value={tableName} 
-            className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50"
-            placeholder="Nhập tên bàn"
-            disabled
-          />
+          <select
+            value={tableName}
+            onChange={(e) => setTableName(e.target.value)}
+            className={`mt-1 block  p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 `}
+          >
+            <option value={tableDefault} className="bg-white">{tableDefault}</option>
+            {listTableOff.map(table => (
+              <option value={table.tableName} className="bg-white">{table.tableName}</option>
+            ))}
+            
+          </select>
         </div>
         <button
           type="button"

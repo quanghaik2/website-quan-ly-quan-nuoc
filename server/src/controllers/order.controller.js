@@ -108,12 +108,15 @@ class Order {
             tableId: tableName ? tableId: order.tableId,
             ...req.body
          })
-         if(tableId) {
+         if(tableId !== '') {
             await models.table.findByIdAndUpdate(tableId, {status: true});
             await models.table.findOneAndUpdate(order.tableId, {status: false});
          }
+         
          if(status === 'hoàn thành'){
             await models.table.findOneAndUpdate(order.tableId, {status: false});
+         }else{
+            await models.table.findOneAndUpdate(order.tableId, {status: true});
          }
          
          return res.status(200).json({
@@ -154,8 +157,6 @@ class Order {
       try {
          // Định nghĩa khoảng thời gian
          const orderId = req.params.id;
-
-         
          const order = await models.order.findByIdAndDelete(orderId);
          if(!order) {
             return res.status(400).json({
@@ -169,6 +170,34 @@ class Order {
          })
       } catch (error) {
          next(error)
+      }
+   }
+
+   getOrdersToday = async (req, res) => {
+      try {
+         //const startDate = new Date(req.body.startDate)
+         const startOfDay = new Date();
+         startOfDay.setHours(0, 0, 0, 0);
+
+         const endOfDay = new Date();
+         endOfDay.setHours(23, 59, 59, 999);
+         
+        // const endDate = new Date(req.body.endDate)
+         
+         // Tạo query để lọc dữ liệu
+         const query = {
+            orderDate: {
+               $gte: startOfDay,
+               $lte: endOfDay,
+            },
+         }
+         const orders = await models.order.find(query)
+         return res.status(200).json({
+            message: 'orders found successfully',
+            orders,
+         })
+      } catch (error) {
+         res.status(500).json({ success: false, message: error.message });
       }
    }
 }

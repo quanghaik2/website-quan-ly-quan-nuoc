@@ -99,7 +99,7 @@ const CreateOrder = () => {
   };
 
   return (
-    <div className="w-full text-black mx-auto mt-10 bg-white shadow-lg rounded-lg relative">
+    <div className="w-full text-black mx-auto bg-white shadow-lg rounded-lg relative">
       {showListOrder && (
         <div className="absolute inset-0">
           <ListProductPage

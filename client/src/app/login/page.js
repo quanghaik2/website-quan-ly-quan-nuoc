@@ -2,6 +2,8 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { setCookie } from '@/utils/cookie';
+import { toast } from 'sonner';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -36,26 +38,27 @@ export default function Login() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ username: email, password }),
         });
 
         const data = await response.json();
         console.log(data);
 
-        if (data) {
-          setMessage('Đăng nhập thành công');
+        if (response.status  === 200) {
+          toast.success('Đăng nhập thành công');
+          setCookie(document, 'role', data.role, { maxAge: 60 * 60 * 24 })
           router.push('/');
         } else {
-          setMessage(data.message || 'Đăng nhập thất bại');
+          toast.error( email + " " + password);
           setAuth(false);
         }
       } catch (error) {
-        setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+        toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
       }
     }
   };
@@ -110,9 +113,6 @@ export default function Login() {
               Đăng nhập
             </button>
           </div>
-          {message && (
-            <p className={`text-xs mt-1 ${auth ? 'text-green-500' : 'text-red-500'}`}>{message}</p>
-          )}
         </form>
       </div>
     </div>

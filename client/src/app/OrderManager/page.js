@@ -36,6 +36,33 @@ const OrderList = () => {
     fetchOrders();
   };
 
+  const handleShowFormDelete = (id) => {
+    setIdOrder(id);
+    setShowFormDelete(true); 
+  };
+
+  const handleUpdateStatus = async(status, orderId) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/update/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          status: status === "đã lên đơn" ? 'chờ thanh toán': status === 'chờ thanh toán' ? 'hoàn thành' : 'hoàn thành',
+        }),
+      });
+
+      if (response.status  === 200) {
+        fetchOrders();
+      } else {
+        toast.error(data.message || 'Cập nhật đơn hàng thất bại');
+      }
+    } catch (error) {
+      toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -46,8 +73,8 @@ const OrderList = () => {
         <div className="absolute inset-0">
           <FormDelete 
           onClose={handleCloseFormData} 
-          id={idorder} 
-          endpoint={'api/order/delete'} 
+          id={idOrder} 
+          endpoint={'api/order'} 
           type='order' 
           onDeleteSuccess={handleDeleteSuccess}
           />
@@ -62,6 +89,7 @@ const OrderList = () => {
               <th className='px-4 py-2 text-center'>Trạng thái</th>
               <th className='px-4 py-2 text-center'>Tiền hóa đơn</th>
               <th className='px-4 py-2 text-center'></th>
+              <th className='px-4 py-2 text-center'></th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +101,9 @@ const OrderList = () => {
                     {order.tableId.tableName}
                   </td>
                   <td className='px-4 py-2 text-center'>
-                    <button className={`w-36 py-2 rounded-lg text-white ${order.status === 'đã lên đơn' ? 'bg-blue-500' : order.status === 'chờ thanh toán' ? 'bg-red-500' : 'bg-green-500'}`}>{order.status}</button>
+                    <button 
+                    className={`w-36 py-2 rounded-lg text-white ${order.status === 'đã lên đơn' ? 'bg-blue-300' : order.status === 'chờ thanh toán' ? 'bg-red-300' : 'bg-green-300'}`}
+                    onClick={() => handleUpdateStatus(order.status, order._id)}>{order.status}</button>
                   </td>
                   <td className='px-4 py-2 text-center'>{order.total_amount}</td>
                   <td>
@@ -82,6 +112,11 @@ const OrderList = () => {
                       <p>Xem đơn</p> <FaArrowRight />
                       </a>
                     </button>
+                  </td>
+                  <td className='px-4 py-2 text-center'>
+                    <button 
+                    className={`w-36 py-2 rounded-lg text-white bg-red-500`}
+                    onClick={() => handleShowFormDelete(order._id)}>Hủy đơn</button>
                   </td>
                 </tr>
               ))

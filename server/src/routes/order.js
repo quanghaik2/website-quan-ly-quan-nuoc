@@ -7,6 +7,8 @@ router.put('/update/:id', orderController.updateOrder)
 router.post('/statics', orderController.getOrdersByDate)
 router.get('/:id', orderController.getOrder)
 router.get('/', orderController.getOrders)
+router.get('/getOrdersToday', orderController.getOrdersToday);
 router.delete('/:id', orderController.deleteOrder);
+
 
 module.exports = router

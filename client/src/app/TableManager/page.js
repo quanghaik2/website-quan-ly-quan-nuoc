@@ -1,4 +1,5 @@
 'use client';
+import EditTable from '@/components/editTable';
 import FormDelete from '@/components/formDelete';
 import React, { useState, useEffect } from 'react';
 import { FaPen } from "react-icons/fa";
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 const TableList = () => {
   const [tables, setTables] = useState([]);
   const [showFormDelete, setShowFormDelete] = useState(false);
+  const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [idTable, setIdTable] = useState(null);
   const fetchTables = async () => {
     try {
@@ -34,10 +36,24 @@ const TableList = () => {
 
   const handleCloseFormData = () => {
     setShowFormDelete(false);
+    setShowFormUpdate(false);
   };
+
+  const handleShowFormUpdate = (id) => {
+    setShowFormUpdate(true);
+    setIdTable(id);
+  };
+
 
   const handleDeleteSuccess = () => {
     setShowFormDelete(false);
+    // Load lại trang hoặc fetch lại dữ liệu
+    fetchTables();
+  };
+
+  const handleUpdateSuccess = () => {
+    
+    setShowFormUpdate(false);
     // Load lại trang hoặc fetch lại dữ liệu
     fetchTables();
   };
@@ -52,6 +68,15 @@ const TableList = () => {
           endpoint={'api/table/delete'} 
           type='table' 
           onDeleteSuccess={handleDeleteSuccess}
+          />
+        </div>
+      )}
+      {showFormUpdate && (
+        <div className="absolute inset-0">
+          <EditTable
+          onClose={handleCloseFormData} 
+          id={idTable} 
+          onUpdateSuccess={handleUpdateSuccess}
           />
         </div>
       )}
@@ -73,7 +98,9 @@ const TableList = () => {
                   <td className=' px-4 py-2 text-center'>{table.tableName}</td>
                   <td className=' px-4 py-2 text-center'>{table.status === false ? 'Còn trống' : 'Đang sử dụng'}</td>
                   <td className=' px-4 py-2 flex justify-center items-center'>
-                    <FaPen className='text-green-500 cursor-pointer' />
+                    <button onClick={() => handleShowFormUpdate(table._id)}>
+                      <FaPen className='text-green-500 cursor-pointer' />
+                    </button>
                     <button onClick={() => handleShowFormDelete(table._id)}>
                       <MdDeleteForever className='text-red-500 ml-1 cursor-pointer' />
                     </button>

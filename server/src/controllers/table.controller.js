@@ -27,19 +27,17 @@ class Table {
         try {
             const { id } = req.params;
             const { tableName } = req.body;
-
+            console.log(tableName)
             if (!tableName) {
                 return res.status(400).json({ message: 'Tên bàn không được để trống' });
             }
 
-            const table = await models.table.findById(id);
-
+            const table = await models.table.findByIdAndUpdate(id, {tableName});
+            
             if (!table) {
                 return res.status(404).json({ message: 'Bàn không tồn tại' });
             }
 
-            table.tableName = tableName;
-            await table.save();
 
             return res.status(200).json({ message: 'Cập nhật bàn thành công', table });
         } catch (error) {
@@ -68,6 +66,26 @@ class Table {
         try {
 
             const table = await models.table.find();
+
+            if (!table) {
+                return res.status(400).json({
+                    message: 'chưa có bàn nào được tạo',
+                })
+            }
+
+            return res.status(200).json({
+                message: 'Lấy bàn thành công',
+                table
+            })
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getTablesOff = async (req, res, next) => {
+        try {
+
+            const table = await models.table.find({status : false});
 
             if (!table) {
                 return res.status(400).json({

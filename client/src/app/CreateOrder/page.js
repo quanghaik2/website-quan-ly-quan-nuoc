@@ -111,7 +111,7 @@ const CreateOrder = () => {
       )}
       <h1 className="text-2xl font-bold mb-6 text-center">Tạo Đơn Hàng</h1>
       <form onSubmit={handleSubmit} className="p-6">
-        <div className="mb-6 w-8">
+        <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700">Tên Bàn</label>
           <input
             type="text"
@@ -148,6 +148,7 @@ const CreateOrder = () => {
                   <td className="p-3">{product.price} VNĐ</td>
                   <td className="p-3">
                     <button
+                      type='button'
                       onClick={() => handleDecrementQuantity(index)}
                       className="px-2 py-1 bg-gray-300 rounded-md mr-2 hover:bg-gray-400 transition duration-200"
                     >
@@ -155,6 +156,7 @@ const CreateOrder = () => {
                     </button>
                     {product.quantity}
                     <button
+                      type='button'
                       onClick={() => handleIncrementQuantity(index)}
                       className="px-2 py-1 bg-gray-300 rounded-md ml-2 hover:bg-gray-400 transition duration-200"
                     >
@@ -164,6 +166,7 @@ const CreateOrder = () => {
                   <td className="p-3">{product.totalPrice} VNĐ</td>
                   <td className="p-3">
                     <button
+                      type='button'
                       onClick={() => {
                         const updatedProducts = products.filter((_, i) => i !== index);
                         const removedProductPrice = product.totalPrice;

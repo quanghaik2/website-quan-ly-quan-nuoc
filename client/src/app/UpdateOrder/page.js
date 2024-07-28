@@ -4,23 +4,54 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ListProductPage from '@/components/ListProducts';
 import { toast } from 'sonner';
+import { FaArrowLeft } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import FormDelete from '@/components/formDelete';
 
 const UpdateOrder = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const tableId = searchParams.get('tableId');
-  const tableName = searchParams.get('tableName');
+  const searchQuery = useSearchParams();
+  const orderId = searchQuery.get('orderId');
+  const [tableName, setTableName] = useState('');
   const [products, setProducts] = useState([]);
   const [note, setNote] = useState('');
   const [showListOrder, setShowListOrder] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [showFormDelete, setShowFormDelete] = useState(false);
+  const [status, setStatus] = useState('');
+
 
   useEffect(() => {
-    const storedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
-    const filteredProducts = storedProducts.filter(product => product && product.name && product.price); // Loại bỏ giá trị rỗng
-    setProducts(filteredProducts);
-    calculateTotalAmount(filteredProducts);
-  }, []);
+    const fetchOrder = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/${orderId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setTableName(data.order.tableId.tableName);
+          
+          setProducts(data.order.products.map(product => ({
+            id: product.productId,
+            name: product.nameProduct,
+            price: product.price,
+            quantity: product.quantity,
+            totalPrice: product.price * product.quantity,
+          })));
+          setNote(data.order.note);
+          setStatus(data.order.status);
+          setTotalAmount(data.order.total_amount);
+        } else {
+          toast.error(data.message || 'Không thể tải đơn hàng');
+        }
+      } catch (error) {
+        toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
+      }
+    };
+
+    if (orderId) {
+      fetchOrder();
+    }
+  }, [orderId]);
 
   const handleShowListOrder = () => {
     setShowListOrder(true);
@@ -62,44 +93,53 @@ const UpdateOrder = () => {
     setTotalAmount(total);
   };
 
+  const handleShowFormDelete = () => {
+    setShowFormDelete(true); 
+  };
+
+  const handleDeleteSuccess = () => {
+    setShowFormDelete(false);
+    router.push('/OrderManager')
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/create`, {
-        method: 'POST',
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/update/${orderId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          tableId,
           note,
           products: products.map(product => ({
             productId: product.id,
             quantity: product.quantity,
             nameProduct: product.name,
-            price: product.price
+            price: product.price,
           })),
+          status: status,
           total_amount: totalAmount
-         }),
+        }),
       });
 
       const data = await response.json();
       console.log(data);
 
-      if (response.status  === 200) {
-        toast.success('Thêm sản phẩm thành công');
+      if (response.ok) {
+        toast.success('Cập nhật đơn hàng thành công');
         router.push('/OrderManager');
       } else {
-        toast.error(data.message || 'Thêm sản phẩm thất bại');
+        toast.error(data.message || 'Cập nhật đơn hàng thất bại');
       }
     } catch (error) {
-      toast.error(error + 'Có lỗi xảy ra. Vui lòng thử lại.');
+      toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
     }
   };
 
   return (
-    <div className="w-full text-black mx-auto mt-10 bg-white shadow-lg rounded-lg relative">
+    <div className="w-full text-black mx-auto bg-white shadow-lg rounded-lg relative">
       {showListOrder && (
         <div className="absolute inset-0">
           <ListProductPage
@@ -109,13 +149,31 @@ const UpdateOrder = () => {
           />
         </div>
       )}
-      <h1 className="text-2xl font-bold mb-6 text-center">Tạo Đơn Hàng</h1>
+      {showFormDelete && (
+        <div className="absolute inset-0">
+          <FormDelete 
+          onClose={handleCloseFormData} 
+          id={orderId} 
+          endpoint={'api/order'} 
+          type='order' 
+          onDeleteSuccess={handleDeleteSuccess}
+          />
+        </div>
+      )}
+      <h1 className="text-2xl font-bold mb-6 text-center mt-10">Cập Nhật Đơn Hàng</h1>
+      <div className='flex justify-between'>
+        <button className='ml-4  p-3 rounded-full border-2 border-green-500 text-green-500 cursor-pointer text-xl'><a href='/OrderManager'><FaArrowLeft/></a></button>
+        <button 
+        className='p-3 flex items-center gap-1 bg-red-500 text-white rounded-lg mr-4 cursor-pointer'
+        onClick={() => handleShowFormDelete()}>
+          <RiDeleteBin6Line/> <samp>Hủy đơn</samp> </button>
+      </div>
       <form onSubmit={handleSubmit} className="p-6">
-        <div className="mb-6 w-8">
-          <label className="block text-sm font-medium text-gray-700">Tên Bàn</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 ">Tên Bàn</label>
           <input
             type="text"
-            value={tableName || ''} 
+            value={tableName} 
             className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50"
             placeholder="Nhập tên bàn"
             disabled
@@ -148,6 +206,7 @@ const UpdateOrder = () => {
                   <td className="p-3">{product.price} VNĐ</td>
                   <td className="p-3">
                     <button
+                      type='button'
                       onClick={() => handleDecrementQuantity(index)}
                       className="px-2 py-1 bg-gray-300 rounded-md mr-2 hover:bg-gray-400 transition duration-200"
                     >
@@ -155,6 +214,7 @@ const UpdateOrder = () => {
                     </button>
                     {product.quantity}
                     <button
+                      type='button'
                       onClick={() => handleIncrementQuantity(index)}
                       className="px-2 py-1 bg-gray-300 rounded-md ml-2 hover:bg-gray-400 transition duration-200"
                     >
@@ -164,6 +224,7 @@ const UpdateOrder = () => {
                   <td className="p-3">{product.totalPrice} VNĐ</td>
                   <td className="p-3">
                     <button
+                      type='button'
                       onClick={() => {
                         const updatedProducts = products.filter((_, i) => i !== index);
                         const removedProductPrice = product.totalPrice;
@@ -191,6 +252,23 @@ const UpdateOrder = () => {
           />
         </div>
 
+        <div className="mb-6 mt-6">
+          <label className="block text-sm font-medium text-gray-700">Trạng thái đơn hàng</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={`mt-1 block  p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 ${
+              status === 'đã lên đơn' ? 'bg-blue-200' :
+              status === 'chờ thanh toán' ? 'bg-red-200' :
+              status === 'Hoàn thành' ? 'bg-green-200' : ''
+            }`}
+          >
+            <option value="đã lên đơn" className="bg-white">Đã lên đơn</option>
+            <option value="chờ thanh toán" className="bg-white">Chờ thanh toán</option>
+            <option value="Hoàn thành" className="bg-white">Hoàn thành</option>
+          </select>
+        </div>
+
         <div className="mt-6">
           <h2 className="text-xl font-bold mb-2">Tổng Tiền</h2>
           <p className="text-lg font-semibold">{totalAmount} VNĐ</p>
@@ -200,7 +278,7 @@ const UpdateOrder = () => {
           type="submit"
           className="bg-green-500 text-white p-3 rounded-md w-full mt-4 hover:bg-green-600 transition duration-200"
         >
-          Tạo Đơn Hàng
+          Cập Nhật Đơn Hàng
         </button>
       </form>
     </div>
@@ -211,6 +289,6 @@ const UpdateOrderPage = () => (
   <Suspense fallback={<div>Loading...</div>}>
     <UpdateOrder/>
   </Suspense>
-)
+);
 
 export default UpdateOrderPage;

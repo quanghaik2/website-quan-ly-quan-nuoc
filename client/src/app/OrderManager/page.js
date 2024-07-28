@@ -2,11 +2,13 @@
 import FormDelete from '@/components/formDelete';
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { FaArrowRight } from "react-icons/fa";
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
   const [showFormDelete, setShowFormDelete] = useState(false);
   const [idOrder, setIdOrder] = useState(null);
+  const [status, setStatus] = useState('');
 
   const fetchOrders = async () => {
     try {
@@ -70,8 +72,17 @@ const OrderList = () => {
                   <td className='px-4 py-2 text-center'>
                     {order.tableId.tableName}
                   </td>
-                  <td className='px-4 py-2 text-center'>{order.status}</td>
+                  <td className='px-4 py-2 text-center'>
+                    <button className={`w-36 py-2 rounded-lg text-white ${order.status === 'đã lên đơn' ? 'bg-blue-500' : order.status === 'chờ thanh toán' ? 'bg-red-500' : 'bg-green-500'}`}>{order.status}</button>
+                  </td>
                   <td className='px-4 py-2 text-center'>{order.total_amount}</td>
+                  <td>
+                    <button className=' py-1 px-2 border-2 border-green-400 rounded-3xl '>
+                      <a className='text-xs flex items-center gap-1' href={`/UpdateOrder?orderId=${order._id}`}>
+                      <p>Xem đơn</p> <FaArrowRight />
+                      </a>
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (

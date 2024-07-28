@@ -3,6 +3,7 @@ const router = require('express').Router();
 
 // Route để lấy tất cả bàn
 router.get('/', tableController.getAll);
+router.get('/getTablesOff', tableController.getTablesOff);
 
 // Route để tạo bàn mới
 router.post('/create', tableController.createTable);

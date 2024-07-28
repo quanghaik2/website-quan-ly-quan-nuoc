@@ -84,7 +84,7 @@ const Menu = () => {
           onClick={() => handleItemClick('thong-ke')}
         >
           <TbReportMoney className='w-5 h-5 mr-1'/>
-          {!collapsed && 'Thống kê'}
+          {!collapsed && <a href='/Statistics'>Thống kê</a>} 
         </div>
       </div>
    </div>

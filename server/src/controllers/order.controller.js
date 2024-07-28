@@ -37,7 +37,10 @@ class Order {
    getOrder = async (req, res, next) => {
       try {
          const { id } = req.params
-         const order = await models.order.findById(id)
+         const order = await models.order.findById(id).populate({
+             path: 'tableId',
+             select: 'tableName'
+         });
          if (!order) {
             const order = await models.order.findOne({ tableId: id })
             if (!order) {
@@ -85,6 +88,15 @@ class Order {
    updateOrder = async (req, res, next) => {
       try {
          const { id } = req.params
+         const {tableName, status} = req.body
+         console.log(tableName)
+         const tableId = await models.table.findOne({tableName}).select('_id');
+         console.log(tableId);
+         if(!tableId && tableName) {
+            return res.status(400).json({
+               message: 'table not found',
+            })
+         }
          const order = await models.order.findById(id)
          if (!order) {
             throw new Error({
@@ -92,10 +104,21 @@ class Order {
                message: 'order not found',
             })
          }
-         await models.order.findByIdAndUpdate(id, req.body)
+         const newOrder = await models.order.findByIdAndUpdate(id, {
+            tableId: tableName ? tableId: order.tableId,
+            ...req.body
+         })
+         if(tableId) {
+            await models.table.findByIdAndUpdate(tableId, {status: true});
+            await models.table.findOneAndUpdate(order.tableId, {status: false});
+         }
+         if(status === 'hoàn thành'){
+            await models.table.findOneAndUpdate(order.tableId, {status: false});
+         }
+         
          return res.status(200).json({
             message: 'order updated successfully',
-            order,
+            newOrder,
          })
       } catch (error) {
          next(error)
@@ -121,6 +144,28 @@ class Order {
          return res.status(200).json({
             message: 'orders found successfully',
             orders,
+         })
+      } catch (error) {
+         next(error)
+      }
+   }
+
+   deleteOrder = async (req, res, next) => {
+      try {
+         // Định nghĩa khoảng thời gian
+         const orderId = req.params.id;
+
+         
+         const order = await models.order.findByIdAndDelete(orderId);
+         if(!order) {
+            return res.status(400).json({
+               message: 'orders not found',
+            })
+         }
+         await models.table.findByIdAndUpdate(order.tableId, {status: false});
+         return res.status(200).json({
+            message: 'orders delete successfully',
+            order,
          })
       } catch (error) {
          next(error)

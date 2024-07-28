@@ -47,7 +47,10 @@ export default function FormDelete({ onClose, type, endpoint, id ,onDeleteSucces
       
       <form onSubmit={handleSubmit}>
         <div>
-            {type === 'table' ? (<p className="text-xl font-bold mb-4 text-black">Bạn có chắc muốn xóa bàn không</p>) :(<p className='text-2xl font-bold mb-4 text-black'>Bạn có chắc muốn xóa sản phẩm không</p>)}
+            {type === 'table' ? (<p className="text-xl font-bold mb-4 text-black">Bạn có chắc muốn xóa bàn không</p>) : 
+            type === 'product' ? (<p className='text-2xl font-bold mb-4 text-black'>Bạn có chắc muốn xóa sản phẩm không</p>):
+            (<p className='text-2xl font-bold mb-4 text-black'>Bạn có chắc muốn xóa đơn không</p>)}
+            
         </div>
         <button type="submit" className="bg-green-500 text-white p-2 rounded-md mr-2">
           Xóa

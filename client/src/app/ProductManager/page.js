@@ -5,7 +5,7 @@ import { FaPen } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from 'sonner';
 
-const ProductList = () => {
+const ProductList = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);
   const [showFormDelete, setShowFormDelete] = useState(false);
   const [idProduct, setIdProduct] = useState(null);
@@ -18,7 +18,7 @@ const ProductList = () => {
         return;
       }
       const data = await response.json();
-      setProducts(data.product); 
+      setProducts(data.product);
     } catch (error) {
       toast.error('Error fetching products:', error);
     }
@@ -35,7 +35,6 @@ const ProductList = () => {
 
   const handleDeleteSuccess = () => {
     setShowFormDelete(false);
-    // Load lại trang hoặc fetch lại dữ liệu
     fetchProducts();
   };
 
@@ -43,16 +42,20 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-4 mt-10 relative">
       {showFormDelete && (
         <div className="absolute inset-0">
-          <FormDelete 
-          onClose={handleCloseFormData} 
-          id={idProduct} 
-          endpoint={'api/product/delete'} 
-          type='product' 
-          onDeleteSuccess={handleDeleteSuccess}
+          <FormDelete
+            onClose={handleCloseFormData}
+            id={idProduct}
+            endpoint={'api/product/delete'}
+            type='product'
+            onDeleteSuccess={handleDeleteSuccess}
           />
         </div>
       )}
@@ -68,8 +71,8 @@ const ProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {products.length > 0 ? (
-              products.map((product, index) => (
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product, index) => (
                 <tr key={product._id} className={(index + 1) % 2 === 0 ? 'bg-white' : 'bg-pink-50'}>
                   <td className='px-4 py-2 text-center'>{index + 1}</td>
                   <td className='px-4 py-2 flex justify-center'>
@@ -87,7 +90,7 @@ const ProductList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className='px-4 py-2 text-center'>Loading...</td>
+                <td colSpan="5" className='px-4 py-2 text-center'>Không tìm thấy sản phẩm nào</td>
               </tr>
             )}
           </tbody>

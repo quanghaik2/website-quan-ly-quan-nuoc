@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { setCookie } from '@/utils/cookie';
+import Cookies from 'js-cookie';
 import { toast } from 'sonner';
 
 export default function Login() {
@@ -51,7 +51,7 @@ export default function Login() {
 
         if (response.status  === 200) {
           toast.success('Đăng nhập thành công');
-          setCookie(document, 'role', data.role, { maxAge: 60 * 60 * 24 })
+          Cookies.set('role', data.role, { expires: 1 });
           router.push('/');
         } else {
           toast.error( email + " " + password);

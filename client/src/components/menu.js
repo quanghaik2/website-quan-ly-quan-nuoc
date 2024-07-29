@@ -1,18 +1,23 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MdOutlineTableRestaurant } from 'react-icons/md'
 import { ImTable2 } from 'react-icons/im'
 import { TbTableAlias, TbReportMoney } from 'react-icons/tb'
 import { IoMenu, IoCloseSharp } from 'react-icons/io5'
 import { RiDrinksFill } from 'react-icons/ri'
 import { IoIosHome } from "react-icons/io"; 
+import {useRouter} from "next/navigation";
 
-const Menu = () => {
+
+const Menu = ({role}) => {
    const [collapsed, setCollapsed] = useState(false)
    const [selectedMenu, setSelectedMenu] = useState(null)
    const [activeItem, setActiveItem] = useState(null) // State để theo dõi mục được chọn
+   
+   
 
+    
    const toggleCollapse = () => {
       setCollapsed(!collapsed)
    }
@@ -53,7 +58,7 @@ const Menu = () => {
           <ImTable2 className='mr-1'/>
           {!collapsed && <a href='/OrderManager'>Quản lý đơn</a>}
         </div>
-        <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-ban'); toggleSubMenu('ban'); }}>
+        {role === 'owner' && <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-ban'); toggleSubMenu('ban'); }}>
           <div className={`flex  px-3 py-3 rounded-xl items-center ${activeItem === 'quan-ly-ban' ? 'bg-blue-500' : ''}`}>
           <TbTableAlias className='mr-1'/>
             {!collapsed && <a href='/TableManager'>Quản lý bàn</a>}
@@ -65,8 +70,8 @@ const Menu = () => {
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'xoa-ban' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'xoa-ban')}>Xóa bàn</div>
             </div>
           )} */}
-        </div>
-        <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-san-pham'); toggleSubMenu('sanpham'); }}>
+        </div>}
+        {role === 'owner' && <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-san-pham'); toggleSubMenu('sanpham'); }}>
           <div className={`flex px-3 py-3 rounded-xl items-center ${activeItem === 'quan-ly-san-pham' ? 'bg-blue-500' : ''}`}>
             <RiDrinksFill className='mr-1'/>
             {!collapsed && <a href='/ProductManager'>Quản lý sản phẩm</a>}
@@ -78,7 +83,7 @@ const Menu = () => {
               <div className={`text-white py-1 pl-1 mb-2 ${activeItem === 'xoa-san-pham' ? 'bg-blue-500' : ''}`} onClick={(e) => handleSubItemClick(e, 'xoa-san-pham')}>Xóa sản phẩm</div>
             </div>
           )} */}
-        </div>
+        </div>}
         <div
           className={`text-white mb-6 flex items-center cursor-pointer ${activeItem === 'thong-ke' ? 'bg-blue-500' : ''}`}
           onClick={() => handleItemClick('thong-ke')}

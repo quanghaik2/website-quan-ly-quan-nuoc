@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Menu from "@/components/menu";
 import { Toaster } from 'sonner';
+import { cookies } from 'next/headers'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,13 +13,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  
+  // const role = cookies().get("role");
+  const role = 'owner';
   return (
     <html lang="en">
       <body className={inter.className}>
       <Toaster position="top-right" richColors/>
       <div className="flex">    
-      <Menu/>
+      <Menu role={role}/>
       {children}
+      
       </div>
       </body>
     </html>

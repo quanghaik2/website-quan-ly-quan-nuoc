@@ -1,9 +1,10 @@
 'use client'
 import Head from 'next/head';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
+import { useState, useContext } from 'react';
+import { UserContext } from '@/contexts'; 
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const [auth, setAuth] = useState(true);
   const router = useRouter();
+  const {setUser} = useContext(UserContext);
 
   const validateForm = () => {
     let formErrors = { email: '', password: '' };
@@ -50,8 +52,11 @@ export default function Login() {
         console.log(data);
 
         if (response.status  === 200) {
-          toast.success('Đăng nhập thành công');
+          
           Cookies.set('role', data.role, { expires: 1 });
+          Cookies.set('username', data.username, { expires: 1 });
+          setUser({role: data.role, username: data.username});
+          toast.success('Đăng nhập thành công');
           router.push('/');
         } else {
           toast.error( email + " " + password);

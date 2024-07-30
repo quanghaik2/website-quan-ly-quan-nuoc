@@ -24,7 +24,7 @@ export default function Home() {
             placeholder="Tìm kiếm sản phẩm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50"
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 text-black"
           />
           <button className='bg-green-700 mx-1 my-3 px-4 py-2 rounded-lg text-white'><a className='flex items-center' href='/CreateProduct'>Thêm Sản phẩm <FaPlus className='ml-1' /></a></button>
         </div>

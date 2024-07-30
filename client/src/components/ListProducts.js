@@ -37,6 +37,21 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080'); // Đảm bảo URL này đúng với server của bạn
+ 
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.action === 'productUpdate') {
+        setProducts((prevProducts) => [...prevProducts, data.product]);
+      }
+    };
+ 
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   const handleProductClick = (product) => {
     const newProduct = {
       id: product._id,

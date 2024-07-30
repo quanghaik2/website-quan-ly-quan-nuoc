@@ -115,7 +115,7 @@ const OrderList = () => {
                   </td>
                   <td className='px-4 py-2 text-center'>
                     <button 
-                    className={`w-36 py-2 rounded-lg text-white bg-red-500`}
+                    className={`px-1 py-2 rounded-lg text-white bg-red-500`}
                     onClick={() => handleShowFormDelete(order._id)}>Hủy đơn</button>
                   </td>
                 </tr>

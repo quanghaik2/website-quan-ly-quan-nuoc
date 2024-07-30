@@ -1,4 +1,4 @@
-const Order = require('../models/order');
+const Order = require('../models/order.model');
 
 class Statistics {
     getMonthlyStatistics = async (req, res, next) => {

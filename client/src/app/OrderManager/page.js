@@ -98,7 +98,7 @@ const OrderList = () => {
                 <tr key={order._id} className={(index + 1) % 2 === 0 ? 'bg-white' : 'bg-pink-50'}>
                   <td className='px-4 py-2 text-center'>{index + 1}</td>
                   <td className='px-4 py-2 text-center'>
-                    {order.tableId.tableName}
+                    {order.tableName}
                   </td>
                   <td className='px-4 py-2 text-center'>
                     <button 

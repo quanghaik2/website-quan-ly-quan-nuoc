@@ -6,7 +6,7 @@ import { FaPen } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from 'sonner';
 
-const TableList = ({ searchTerm }) => {
+const TableList = ({ searchTerm, refresh }) => {
   const [tables, setTables] = useState([]);
   const [showFormDelete, setShowFormDelete] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
@@ -24,6 +24,8 @@ const TableList = ({ searchTerm }) => {
       toast.error('Error fetching tables:', error);
     }
   };
+
+  
 
   useEffect(() => {
     fetchTables();

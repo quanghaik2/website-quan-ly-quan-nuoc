@@ -1,17 +1,8 @@
 const models = require('../models');
-const notifyClients = require('../../websocket-server');
+
 
 class Table {
-//   constructor() {
-//     this.initChangeStream();
-//   }
 
-//   initChangeStream = () => {
-//     models.table.watch().on('change', (change) => {
-//       console.log('Change detected in table collection:', change);
-//       notifyClients(change);
-//     });
-//   };
 
   createTable = async (req, res, next) => {
     try {

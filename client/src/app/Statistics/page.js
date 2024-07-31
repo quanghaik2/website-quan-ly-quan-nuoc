@@ -6,8 +6,9 @@ import { useSearchParams } from 'next/navigation'
 const Statistics = () => {
   const [orders, setOrders] = useState([]);
   const type = useSearchParams().get('type');
-  const [startDate, setStartDate] = useState('2024-07-01'); // Điều chỉnh theo nhu cầu
-  const [endDate, setEndDate] = useState('2024-07-31'); // Điều chỉnh theo nhu cầu
+  
+  //const [startDate, setStartDate] = useState('2024-07-01'); // Điều chỉnh theo nhu cầu
+  //const [endDate, setEndDate] = useState('2024-07-31'); // Điều chỉnh theo nhu cầu
   const [products, setProducts] = useState([{
     name: "Bạc xỉu",
     quantity: 5
@@ -38,7 +39,25 @@ const Statistics = () => {
   return `${hours}:${minutes}`;
 }
 
+const currentDate = new Date();
+let start, end;
 
+if (type === 'day') {
+  start = new Date(currentDate);
+  end = new Date(currentDate);
+  end.setDate(end.getDate() + 1);
+} else if (type === 'month') {
+  start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+} else {
+  // Cung cấp giá trị mặc định nếu type không phải là 'day' hoặc 'month'
+  start = new Date(currentDate);
+  end = new Date(currentDate);
+  end.setDate(end.getDate() + 1);
+}
+
+const [startDate, setStartDate] = useState(start.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
+const [endDate, setEndDate] = useState(end.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +84,7 @@ const Statistics = () => {
         });
         const data = await response.json();
         const data2 = await response2.json();
-        //setProducts(data2.monthlyData);
+        setProducts(data2.items);
         setOrders(data.orders);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -159,7 +178,7 @@ const Statistics = () => {
         </thead>
         {products.map((product, index) => (
           <tbody>
-            <tr>
+            <tr key={index}>
               <th className="py-2 px-4 font-mono">{index+1}</th>
               <th className="py-2 px-4 font-mono">{product.name}</th>
               <th className="py-2 px-4 font-mono">{product.quantity} </th>
@@ -181,6 +200,7 @@ const Statistics = () => {
       
       {/* Form chọn ngày */}
       <div className="mb-4">
+      
         <label className="block mb-2">
           Ngày bắt đầu:
           <input
@@ -212,7 +232,7 @@ const Statistics = () => {
         </thead>
         {orders.map((order, index) => (
           <tbody>
-            <tr>
+            <tr key={index}>
               <th className="py-2 px-4 font-mono">{index+1}</th>
               <th className="py-2 px-4 font-mono">{convertToTime(order.orderDate)}</th>
               <th className="py-2 px-4 font-mono">{order.total_amount} </th>

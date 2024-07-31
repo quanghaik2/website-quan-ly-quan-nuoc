@@ -3,52 +3,59 @@ const models = require('../models');
 class Statistics {
    getMonthlyStatistics = async (req, res, next) => {
       try {
-        const startDate = new Date(req.body.startDate);
-        const endDate = new Date(req.body.endDate);
-        const orders = await models.order
-          .find({
-            orderDate: {
-              $gte: startDate,
-              $lte: endDate,
-            },
-          })
-          .populate('products.productId');
-    
-        let stats = {};
-        let monthlyData = [];
-    
-        orders.forEach((order) => {
-          const date = new Date(order.orderDate);
-          const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-    
-          if (!stats[monthYear]) {
-            stats[monthYear] = { items: {} };
-          }
-    
-          order.products.forEach((product) => {
-            if (!stats[monthYear].items[product.nameProduct]) {
-              stats[monthYear].items[product.nameProduct] = { quantity: 0 };
+         const startDate = new Date(req.body.startDate);
+         const endDate = new Date(req.body.endDate);
+         const orders = await models.order
+            .find({
+               orderDate: {
+                  $gte: startDate,
+                  $lte: endDate,
+               },
+            })
+            .populate('products.productId');
+
+         let stats = {
+            items: [],
+         };
+
+         orders.forEach((order) => {
+            const date = new Date(order.orderDate);
+            const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+            if (!stats.month) {
+               stats = {
+                  month: monthYear,
+                  ...stats,
+               };
             }
-            stats[monthYear].items[product.nameProduct].quantity += product.quantity;
-          });
-        });
-    
-        stats.total = orders.reduce((total, order) => {
-          return total + order.total_amount;
-        }, 0);
-    
-        // Chuyển đổi stats sang dạng mảng
-        for (const [monthYear, data] of Object.entries(stats)) {
-          if (monthYear !== 'total') {
-            monthlyData.push({ month: monthYear, items: data.items });
-          }
-        }
-    
-        return res.status(200).json({ monthlyData, total: stats.total });
+
+            order.products.forEach((product) => {
+               const found = stats.items.some(
+                  (item) => item.name === product.nameProduct
+               );
+               if (found) {
+                  stats.items.forEach((item) => {
+                     if (item.name === product.nameProduct) {
+                        item.quantity += product.quantity;
+                     }
+                  });
+               } else {
+                  stats.items.push({
+                     name: product.nameProduct,
+                     quantity: product.quantity,
+                  });
+               }
+            });
+         });
+
+         stats.total = orders.reduce((total, order) => {
+            return total + order.total_amount;
+         }, 0);
+
+         return res.status(200).json(stats);
       } catch (error) {
-        next(error);
+         next(error);
       }
-    };
+   };
 
    getDailyStatistics = async (req, res, next) => {
       try {
@@ -62,21 +69,30 @@ class Statistics {
             })
             .populate('products.productId');
 
-         const stats = {};
+         let stats = {
+            items: [],
+            date: startDate,
+         };
          orders.forEach((order) => {
-            const date = new Date(order.orderDate);
-            const day = date.toISOString().split('T')[0]; // format YYYY-MM-DD
-
-            if (!stats[day]) {
-               stats[day] = { items: {} };
-            }
+            // const date = new Date(order.orderDate);
+            // const day = date.toISOString().split('T')[0]; // format YYYY-MM-DD
 
             order.products.forEach((product) => {
-               if (!stats[day].items[product.nameProduct]) {
-                  stats[day].items[product.nameProduct] = { quantity: 0 };
+               const found = stats.items.some(
+                  (item) => item.name === product.nameProduct
+               );
+               if (found) {
+                  stats.items.forEach((item) => {
+                     if (item.name === product.nameProduct) {
+                        item.quantity += product.quantity;
+                     }
+                  });
+               } else {
+                  stats.items.push({
+                     name: product.nameProduct,
+                     quantity: product.quantity,
+                  });
                }
-               stats[day].items[product.nameProduct].quantity +=
-                  product.quantity;
             });
          });
          stats.total = orders.reduce((total, order) => {

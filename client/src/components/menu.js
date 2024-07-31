@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 const Menu = () => {
-   const [collapsed, setCollapsed] = useState(true);
+   const [collapsed, setCollapsed] = useState(false);
    const [selectedMenu, setSelectedMenu] = useState(null);
    const [activeItem, setActiveItem] = useState(null); // State để theo dõi mục được chọn
    
@@ -54,14 +54,14 @@ const Menu = () => {
             className={`text-white mb-6 flex items-center px-3 py-3 rounded-xl cursor-pointer ${activeItem === 'danh-sach-ban' ? 'bg-blue-500' : ''}`}
             onClick={() => handleItemClick('danh-sach-ban')}
           >
-            <IoIosHome className='mr-1' />
+            <a href='/'><IoIosHome className='mr-1' /></a>
             {!collapsed && <a href='/'>Trang chủ</a>}
           </div>
           <div
             className={`text-white mb-6 flex items-center px-3 py-3 rounded-xl cursor-pointer ${activeItem === 'danh-sach-don' ? 'bg-blue-500' : ''}`}
             onClick={() => handleItemClick('danh-sach-don')}
           >
-            <ImTable2 className='mr-1' />
+            <a href='/OrderManager'><ImTable2 className='mr-1' /></a>
             {!collapsed && <a href='/OrderManager'>Quản lý đơn</a>}
           </div>
           {role === 'owner' && (
@@ -75,7 +75,7 @@ const Menu = () => {
           {role === 'owner' && (
             <div className="text-white mb-6 cursor-pointer" onClick={() => { handleItemClick('quan-ly-san-pham'); toggleSubMenu('sanpham'); }}>
               <div className={`flex px-3 py-3 rounded-xl items-center ${activeItem === 'quan-ly-san-pham' ? 'bg-blue-500' : ''}`}>
-                <RiDrinksFill className='mr-1' />
+                <a href='/ProductManager'><RiDrinksFill className='mr-1' /></a>
                 {!collapsed && <a href='/ProductManager'>Quản lý sản phẩm</a>}
               </div>
             </div>

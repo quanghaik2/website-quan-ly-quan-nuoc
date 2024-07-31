@@ -7,6 +7,7 @@ import { IoCloseSharp } from 'react-icons/io5'
 
 const ListProductPage = ({ onClose, onProductSelect }) => {
   const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const formRef = useRef(null);
 
   const fetchProducts = async () => {
@@ -63,17 +64,29 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
     onProductSelect(newProduct);
   };
 
+  const filteredProducts = products.filter(product => 
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="bg-white w-full h-svh text-black p-10" ref={formRef}>
-      <div className='w-full  flex justify-end mb-8'>
-        <button className='p-2 bg-red-500 rounded-sm  text-white font-bold text-2xl' 
-        onClick={onClose}>
+      <div className='w-full flex justify-end mb-8'>
+        <button className='p-2 bg-red-500 rounded-sm text-white font-bold text-2xl' onClick={onClose}>
           <IoCloseSharp/>
         </button>
       </div>
+      <div className='mb-4'>
+        <input
+          type="text"
+          className="w-full p-2 border border-gray-300 rounded"
+          placeholder="Tìm kiếm sản phẩm..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <div className='grid gap-6 grid-cols-5'>
-        {products.length > 0 ? (
-          products.map((product) => (
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
             <div 
               key={product._id} 
               className='bg-pink-50 cursor-pointer'

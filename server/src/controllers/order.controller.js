@@ -159,6 +159,51 @@ class Order {
       }
    };
 
+   getOrdersByMonth = async (req, res, next) => {
+      try {
+         const startDate = new Date(req.body.startDate);
+         const endDate = new Date(req.body.endDate);
+      } catch (error) {
+         next(error);
+      }
+   };
+
+   getOrdersNow = async (req, res, next) => {
+      try {
+         // Định nghĩa khoảng thời gian
+         const month =
+            new Date().getMonth() < 10
+               ? `0${new Date().getMonth() + 1}`
+               : `${new Date().getMonth() + 1}`;
+         const startDate = new Date(
+            `${new Date().getFullYear()}-${month}-${new Date().getDate()}`
+         );
+         const endDate = new Date(
+            `${new Date().getFullYear()}-${month}-${new Date().getDate() + 1}`
+         );
+
+         console.log(
+            '🚀 ~ Order ~ getOrdersNow= ~ endDate:',
+            new Date() + 3
+         );
+
+         // Tạo query để lọc dữ liệu
+         const query = {
+            orderDate: {
+               $gte: startDate,
+               $lte: endDate,
+            },
+         };
+         const orders = await models.order.find(query);
+         return res.status(200).json({
+            message: 'orders found successfully',
+            orders,
+         });
+      } catch (error) {
+         next(error);
+      }
+   };
+
    deleteOrder = async (req, res, next) => {
       try {
          // Định nghĩa khoảng thời gian

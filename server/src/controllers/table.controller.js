@@ -10,7 +10,6 @@ class Table {
                .json({ message: 'Chưa nhập giá trị sao tôi thêm được' });
          }
 
-         console.log(tableName);
          const table = await models.table.findOne({ tableName: tableName });
 
          if (table) {

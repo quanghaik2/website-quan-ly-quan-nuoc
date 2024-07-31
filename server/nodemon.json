@@ -1,9 +1,0 @@
-{
-    "watch": ["server", "models", "controllers"],
-    "ext": "js,json",
-    "ignore": ["node_modules"],
-    "execMap": {
-      "js": "node --require dotenv/config"
-    }
-  }
-  

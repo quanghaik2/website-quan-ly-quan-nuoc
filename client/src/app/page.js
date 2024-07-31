@@ -6,11 +6,41 @@ import Cookies from 'js-cookie';
 import NavigationCustom from '@/components/navigate';
 import TableLayout from '@/components/tableLayout';
 import Head from 'next/head';
+import { connectWebSocket, sendMessage } from '../../socketClient';
 
 export default function Home() {
   const [tableStatus, setTableStatus] = useState(''); // State để lưu trữ trạng thái bàn
   const [searchQuery, setSearchQuery] = useState(''); // State để lưu trữ truy vấn tìm kiếm
 
+  // useEffect(() => {
+  //   const socket = new WebSocket('ws://localhost:8080');
+
+  //   socket.onopen = () => {
+  //     console.log('Connected to WebSocket server');
+  //   };
+
+  //   socket.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     console.log('WebSocket message received:', data);
+  //     // Handle changes from WebSocket here
+  //     if (data.fullDocument) {
+  //       setTables(prevTables => {
+  //         const updatedTables = [...prevTables];
+  //         const index = updatedTables.findIndex(table => table._id === data.documentKey._id);
+  //         if (index > -1) {
+  //           updatedTables[index] = data.fullDocument;
+  //         } else {
+  //           updatedTables.push(data.fullDocument);
+  //         }
+  //         return updatedTables;
+  //       });
+  //     }
+  //   };
+
+  //   return () => {
+  //     socket.close();
+  //   };
+  // }, []);
   // Hàm xử lý khi người dùng chọn mục từ menu
   const handleMenuClick = (status) => {
     setTableStatus(status);

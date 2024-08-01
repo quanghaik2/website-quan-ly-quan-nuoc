@@ -20,7 +20,7 @@ export default function Login() {
     let isValid = true;
 
     if (!email) {
-      formErrors.email = 'Email không được để trống';
+      formErrors.email = 'username không được để trống';
       isValid = false;
     }
 
@@ -83,7 +83,7 @@ export default function Login() {
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Tài khoản</label>
             <input
               
               id="email"

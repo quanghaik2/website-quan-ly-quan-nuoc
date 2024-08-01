@@ -7,6 +7,7 @@ import CreateTable from '@/components/createTable1';
 export default function TableManagerLayout() {
   const [showCreateTable, setShowCreateTable] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [refresh, setRefresh] = useState(false);
 
   const handleShowCreateTable = () => {
     setShowCreateTable(true);
@@ -18,6 +19,7 @@ export default function TableManagerLayout() {
 
   const handleCreateSuccess = () => {
     setShowCreateTable(false);
+    setRefresh(true);
   };
 
   return (
@@ -42,7 +44,7 @@ export default function TableManagerLayout() {
             >Thêm bàn <FaPlus className='ml-1' /></p></button>
         </div>
         <div className=' mt-10 border-blue-300 border-2 rounded-xl bg-white'>
-          <TableList searchTerm={searchTerm} />
+          <TableList searchTerm={searchTerm} refresh = {refresh} />
         </div>
       </div>
     </div>

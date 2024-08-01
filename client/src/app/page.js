@@ -7,6 +7,7 @@ import NavigationCustom from '@/components/navigate';
 import TableLayout from '@/components/tableLayout';
 import Head from 'next/head';
 
+
 export default function Home() {
   const [tableStatus, setTableStatus] = useState(''); // State để lưu trữ trạng thái bàn
   const [searchQuery, setSearchQuery] = useState(''); // State để lưu trữ truy vấn tìm kiếm

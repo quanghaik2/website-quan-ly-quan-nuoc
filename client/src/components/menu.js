@@ -17,12 +17,14 @@ const Menu = () => {
    const [selectedMenu, setSelectedMenu] = useState(null);
    const [activeItem, setActiveItem] = useState(null); // State để theo dõi mục được chọn
 
-   const { user } = useContext(UserContext);
+   const { user, setUser } = useContext(UserContext);
    const role = user.role;
    const router = useRouter();
 
    const handleLogout = () => {
       Cookies.remove('role');
+      Cookies.remove('username');
+      setUser({ role: null, username: null });
       router.push('/login');
    };
 
@@ -61,26 +63,24 @@ const Menu = () => {
                      )}
                   </button>
                   <div className='p-4'>
-                     <div
+                     <a
+                        href='/'
                         className={`text-white mb-6 flex items-center px-3 py-3 rounded-xl cursor-pointer ${
                            activeItem === 'danh-sach-ban' ? 'bg-blue-500' : ''
                         }`}
                         onClick={() => handleItemClick('danh-sach-ban')}>
-                        <a href='/'>
-                           <IoIosHome className='mr-1' />
-                        </a>
+                        <IoIosHome className='mr-1' />
                         {!collapsed && <a href='/'>Trang chủ</a>}
-                     </div>
-                     <div
+                     </a>
+                     <a
+                        href='/OrderManager'
                         className={`text-white mb-6 flex items-center px-3 py-3 rounded-xl cursor-pointer ${
                            activeItem === 'danh-sach-don' ? 'bg-blue-500' : ''
                         }`}
                         onClick={() => handleItemClick('danh-sach-don')}>
-                        <a href='/OrderManager'>
-                           <ImTable2 className='mr-1' />
-                        </a>
+                        <ImTable2 className='mr-1' />
                         {!collapsed && <a href='/OrderManager'>Quản lý đơn</a>}
-                     </div>
+                     </a>
                      {role === 'owner' && (
                         <div
                            className='text-white mb-6 cursor-pointer'
@@ -108,19 +108,18 @@ const Menu = () => {
                               handleItemClick('quan-ly-san-pham');
                               toggleSubMenu('sanpham');
                            }}>
-                           <div
+                           <a
+                              href='/ProductManager'
                               className={`flex px-3 py-3 rounded-xl items-center ${
                                  activeItem === 'quan-ly-san-pham'
                                     ? 'bg-blue-500'
                                     : ''
                               }`}>
-                              <a href='/ProductManager'>
-                                 <RiDrinksFill className='mr-1' />
-                              </a>
+                              <RiDrinksFill className='mr-1' />
                               {!collapsed && (
                                  <a href='/ProductManager'>Quản lý sản phẩm</a>
                               )}
-                           </div>
+                           </a>
                         </div>
                      )}
                      <div
@@ -139,20 +138,22 @@ const Menu = () => {
                         </div>
                         {selectedMenu === 'thong-ke' && (
                            <div className='ml-8 mt-2'>
-                              <div
+                              <a
+                                 href='/Statistics?type=date'
                                  className={`text-white py-1 pl-1 mb-2 ${
                                     activeItem === 'day' ? 'bg-blue-500' : ''
                                  }`}
                                  onClick={(e) => handleSubItemClick(e, 'day')}>
-                                 <a href='/Statistics?type=date'>Theo ngày</a>
-                              </div>
-                              <div
+                                 <div>Theo ngày</div>
+                              </a>
+                              <a
+                                 href='/Statistics?type=month'
                                  className={`text-white py-1 pl-1 mb-2 ${
                                     activeItem === 'moth' ? 'bg-blue-500' : ''
                                  }`}
                                  onClick={(e) => handleSubItemClick(e, 'moth')}>
-                                 <a href='/Statistics?type=month'>Theo tháng</a>
-                              </div>
+                                 <div>Theo tháng</div>
+                              </a>
                            </div>
                         )}
                      </div>

@@ -56,11 +56,11 @@ const EditProduct = () => {
     if (!productName) {
       newErrors.productName = 'Tên sản phẩm không được để trống';
     }
-    if (!/^\d+$/.test(price)) {
-      newErrors.price = 'Giá sản phẩm phải là số';
+    if (!/^\d+$/.test(price) && price > 0) {
+      newErrors.price = 'Giá sản phẩm không hợp lệ';
     }
-    if (!/^[a-zA-Z]/.test(image)) {
-      newErrors.image = 'Ảnh sản phẩm không được bắt đầu bằng số hoặc ký tự đặc biệt';
+    if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image)) {
+      newErrors.image = 'Ảnh sản phẩm phải hợp lệ';
     }
     if (!category) {
       newErrors.category = 'Loại sản phẩm không được để trống';

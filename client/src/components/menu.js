@@ -129,7 +129,7 @@ const Menu = () => {
                         }}>
                         <div
                            className={`flex px-3 py-3 rounded-xl items-center ${
-                              activeItem === 'quan-ly-san-pham'
+                              activeItem === 'thong-ke'
                                  ? 'bg-blue-500'
                                  : ''
                            }`}>

@@ -25,6 +25,7 @@ const ProductList = ({ searchTerm }) => {
   };
 
   const handleShowFormDelete = (id) => {
+    window.scrollTo(0, 0);
     setShowFormDelete(true);
     setIdProduct(id);
   };
@@ -76,7 +77,7 @@ const ProductList = ({ searchTerm }) => {
                 <tr key={product._id} className={(index + 1) % 2 === 0 ? 'bg-white' : 'bg-pink-50'}>
                   <td className='px-4 py-2 text-center'>{index + 1}</td>
                   <td className='px-4 py-2 flex justify-center'>
-                    <img className='w-10' src={product.image} alt={product.productName} />
+                    <img className='w-10 h-10' src={product.image} alt={product.productName} />
                   </td>
                   <td className='px-4 py-2 text-center'>{product.productName}</td>
                   <td className='px-4 py-2 text-center'>{product.price}</td>

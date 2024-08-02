@@ -1,9 +1,6 @@
-"use client"
-
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { IoCloseSharp } from 'react-icons/io5'
+import { IoCloseSharp } from 'react-icons/io5';
 
 const ListProductPage = ({ onClose, onProductSelect }) => {
   const [products, setProducts] = useState([]);
@@ -69,42 +66,46 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
   );
 
   return (
-    <div className="bg-white w-full h-svh text-black p-10" ref={formRef}>
-      <div className='w-full flex justify-end mb-8'>
-        <button className='p-2 bg-red-500 rounded-sm text-white font-bold text-2xl' onClick={onClose}>
-          <IoCloseSharp/>
-        </button>
+    <div className="bg-white w-full h-full text-black p-4 overflow-y-hidden" ref={formRef}>
+      <div className='fixed w-full bg-white'>
+        <div className=' w-5/6 flex justify-end '>
+          <button className='p-2 bg-red-500 rounded-sm text-white font-bold text-2xl' onClick={onClose}>
+            <IoCloseSharp/>
+          </button>
+        </div>
+        <div className='mb-2 mt-6'>
+          <input
+            type="text"
+            className="w-5/6 p-2 border border-gray-300 rounded"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
-      <div className='mb-4'>
-        <input
-          type="text"
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Tìm kiếm sản phẩm..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div className='grid gap-6 grid-cols-5'>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <div 
-              key={product._id} 
-              className='bg-pink-50 cursor-pointer'
-              onClick={() => handleProductClick(product)}
-            >
-              <div className='px-2 py-2 flex justify-center'>
-                <img className='w-28 h-28' src={product.image} alt={product.productName} />
+      <div className='mt-36 overflow-y-auto h-[calc(100%-6rem)]'>
+        <div className='grid gap-6 grid-cols-5'>
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <div 
+                key={product._id} 
+                className='bg-pink-50 cursor-pointer'
+                onClick={() => handleProductClick(product)}
+              >
+                <div className='px-2 py-2 flex justify-center'>
+                  <img className='w-28 h-28' src={product.image} alt={product.productName} />
+                </div>
+                <div className='px-4 py-2 text-center'>
+                  <p className='font-bold'>{product.productName}</p>
+                </div>                 
               </div>
-              <div className='px-4 py-2 text-center'>
-                <p className='font-bold'>{product.productName}</p>
-              </div>                 
+            ))
+          ) : (
+            <div>
+              <p className='px-4 py-2 text-center'>Loading...</p>
             </div>
-          ))
-        ) : (
-          <div>
-            <p className='px-4 py-2 text-center'>Loading...</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

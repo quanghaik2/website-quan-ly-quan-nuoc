@@ -5,6 +5,7 @@ const router = require('express').Router();
 router.post('/create', orderController.createOrder);
 router.put('/update/:id', orderController.updateOrder);
 router.post('/statics', orderController.getOrdersByDate);
+router.post('/orderOfTable', orderController.getOrderWithTableId);
 router.get('/statics-now', orderController.getOrdersNow);
 router.get('/:id', orderController.getOrder);
 router.get('/', orderController.getOrders);

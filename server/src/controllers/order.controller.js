@@ -149,7 +149,10 @@ class Order {
                $lte: endDate,
             },
          };
-         const orders = await models.order.find(query);
+         const orders = await models.order.find(query).populate({
+            path: 'tableId',
+            select: 'tableName',
+         });;
          return res.status(200).json({
             message: 'orders found successfully',
             orders,
@@ -249,6 +252,30 @@ class Order {
          });
       } catch (error) {
          res.status(500).json({ success: false, message: error.message });
+      }
+   };
+
+   getOrderWithTableId = async (req, res, next) => {
+      try {
+         const startDate = new Date(req.body.startDate);
+         const endDate = new Date(req.body.endDate);
+         const tableId = req.body.tableId;
+
+         // Tạo query để lọc dữ liệu
+         const query = {
+            orderDate: {
+               $gte: startDate,
+               $lte: endDate,
+            },
+            tableId: tableId,
+         };
+         const orders = await models.order.findOne(query);
+         return res.status(200).json({
+            message: 'orders found successfully',
+            orders,
+         });
+      } catch (error) {
+         next(error);
       }
    };
 }

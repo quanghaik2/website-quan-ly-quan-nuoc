@@ -32,16 +32,19 @@ const TableList = ({ searchTerm, refresh }) => {
   }, []);
 
   const handleShowFormDelete = (id) => {
+    window.scrollTo(0, 0);
     setShowFormDelete(true);
     setIdTable(id);
   };
 
   const handleCloseFormData = () => {
+    window.scrollTo(0, 0);
     setShowFormDelete(false);
     setShowFormUpdate(false);
   };
 
   const handleShowFormUpdate = (id) => {
+    window.scrollTo(0, 0);
     setShowFormUpdate(true);
     setIdTable(id);
   };

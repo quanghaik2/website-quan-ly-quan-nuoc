@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { toast } from 'sonner';
 import { useState, useContext } from 'react';
 import { UserContext } from '@/contexts'; 
+import Image from 'next/image';
+import logo from '/public/logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -63,7 +65,8 @@ export default function Login() {
           setAuth(false);
         }
       } catch (error) {
-        toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
+        toast.error('Có lỗi xảy ra. Vui lòng thử lại.' + error);
+        console.log(error);
       }
     }
   };
@@ -78,19 +81,19 @@ export default function Login() {
 
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
         <div className='flex items-center justify-center'>
-          <img src='/logo.png' className='w-14 rounded-xl'/>
+          <Image src={logo} alt='Logo' width={56} height={56} className='rounded-xl' />
           <h2 className="text-3xl font-bold text-center text-black ml-2" ><span className='text-pink-300'>CBP</span> menu</h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Tài khoản</label>
+            <label className="block text-sm font-medium text-gray-700">Tài khoản</label>
             <input
-              
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="block w-full px-4 py-2 mt-1 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
               required
+              autoComplete="current-email"
             />
             {errors.email && (
               <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -105,6 +108,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="block w-full px-4 py-2 mt-1 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300"
               required
+              autoComplete="current-password"
             />
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>

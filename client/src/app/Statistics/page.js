@@ -44,19 +44,34 @@ function StatisticsPage() {
    const currentDate = new Date();
    let start, end;
 
-   if (type === 'day') {
-      start = new Date(currentDate);
-      end = new Date(currentDate);
-      end.setDate(end.getDate() + 1);
-   } else if (type === 'month') {
+   if (type === 'month') {
       start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
       end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+   } else {
+      start = new Date(currentDate);
+      end = new Date(currentDate);
+      end.setDate(start.getDate() + 1);    
    }
 
    const [startDate, setStartDate] = useState(
       start.toISOString().split('T')[0]
    ); // Định dạng YYYY-MM-DD
    const [endDate, setEndDate] = useState(end.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
+
+   const handleDateChange = (e) => {
+      const isoDate = e.target.value;
+      setStartDate(isoDate);
+      
+      // Tạo đối tượng Date từ isoDate
+      const date = new Date(isoDate);
+      
+      // Tăng ngày lên 1
+      date.setDate(date.getDate() + 1);
+      
+      // Chuyển đổi lại về dạng yyyy-mm-dd
+      const nextDate = date.toISOString().split('T')[0];
+      setEndDate(nextDate);
+  };
 
    useEffect(() => {
       const fetchData = async () => {
@@ -120,6 +135,7 @@ function StatisticsPage() {
 
    return (
       <div className='container mx-auto p-6 bg-white text-black'>
+         
          {type === 'month' ? (
             <div>
                <h1 className='text-2xl font-bold mb-4'>Thống Kê Theo Tháng</h1>
@@ -222,11 +238,11 @@ function StatisticsPage() {
                      <input
                         type='date'
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        onChange={handleDateChange}
                         className='ml-2 p-2 border border-gray-300 rounded'
                      />
                   </label>
-                  <label className='block mb-2'>
+                  {/* <label className='block mb-2'>
                      Ngày kết thúc:
                      <input
                         type='date'
@@ -234,7 +250,7 @@ function StatisticsPage() {
                         onChange={(e) => setEndDate(e.target.value)}
                         className='ml-2 p-2 border border-gray-300 rounded'
                      />
-                  </label>
+                  </label> */}
                </div>
 
                <table className='min-w-full bg-white border border-gray-200 rounded-md shadow-md'>

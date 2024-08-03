@@ -10,11 +10,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto bg-white">
-      <Head>
-        <title>Product Layout</title>
-        <meta name="description" content="Table layout with Next.js and Tailwind CSS" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
       <main className='bg-slate-200'>
         <div className='flex justify-around items-center mt-4'>

@@ -29,11 +29,15 @@ const Menu = () => {
    };
 
    const toggleCollapse = () => {
-      setCollapsed(!collapsed);
+      setCollapsed(!collapsed);   
+         setSelectedMenu(null);
    };
 
    const toggleSubMenu = (menu) => {
       setSelectedMenu(selectedMenu === menu ? null : menu);
+      if(menu === 'thong-ke'){
+         setCollapsed(false);
+      };
    };
 
    const handleItemClick = (item) => {
@@ -43,6 +47,7 @@ const Menu = () => {
    const handleSubItemClick = (e, item) => {
       setActiveItem(item);
       e.stopPropagation();
+      
    };
 
    return (

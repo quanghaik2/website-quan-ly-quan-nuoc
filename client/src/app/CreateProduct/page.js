@@ -30,7 +30,7 @@ export default function AddProduct() {
     if (!productName) {
       newErrors.productName = 'Vui lòng nhập tên sản phẩm';
     }
-    if (!/^\d+$/.test(price) && price > 0) {
+    if (!/^\d+$/.test(price) ||  price < 1) {
       newErrors.price = 'Giá sản phẩm phải hợp lệ';
     }
     if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image)) {

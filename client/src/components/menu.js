@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 const Menu = () => {
-   const [collapsed, setCollapsed] = useState(false);
+   const [collapsed, setCollapsed] = useState(true);
    const [selectedMenu, setSelectedMenu] = useState(null);
    const [activeItem, setActiveItem] = useState(null); // State để theo dõi mục được chọn
 

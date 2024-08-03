@@ -84,7 +84,7 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
         </div>
       </div>
       <div className='mt-36 overflow-y-auto h-[calc(100%-6rem)]'>
-        <div className='grid gap-6 grid-cols-5'>
+        <div className='grid gap-6 grid-cols-5  pb-8'>
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <div 

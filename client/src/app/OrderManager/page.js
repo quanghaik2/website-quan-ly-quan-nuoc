@@ -121,11 +121,11 @@ const OrderList = () => {
         <table className='min-w-full table-auto'>
           <thead className='bg-gray-200'>
             <tr>
-              <th className='px-4 py-2 text-left'>STT</th>
-              <th className='px-4 py-2 text-left'>Tên bàn</th>
-              <th className='px-4 py-2 text-left'>Trạng thái</th>
-              <th className='px-4 py-2 text-left'>Tiền hóa đơn</th>
-              <th className='px-4 py-2 text-left'>Ngày bán</th>
+              <th className='px-4 py-2 text-center'>STT</th>
+              <th className='px-4 py-2 text-center'>Tên bàn</th>
+              <th className='px-4 py-2 text-center'>Trạng thái</th>
+              <th className='px-4 py-2 text-center'>Tiền hóa đơn</th>
+              <th className='px-4 py-2 text-center'>Ngày bán</th>
               <th className='px-4 py-2'></th>
               <th className='px-4 py-2'></th>
             </tr>

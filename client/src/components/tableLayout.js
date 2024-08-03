@@ -37,6 +37,13 @@ const TableLayout = ({ tableStatus, searchQuery }) => {
       let listTable = data.table;
       setOrders(data2.orders)
       // Lọc bàn dựa trên trạng thái
+
+      listTable = listTable.map(table => {
+        const isOccupied = orders.some(order => order.tableId._id === table._id);
+        return { ...table, status: isOccupied };
+      });
+
+
       if (tableStatus === 'empty') {
         listTable = listTable.filter(table => table.status === false);
       } else if (tableStatus === 'serving') {

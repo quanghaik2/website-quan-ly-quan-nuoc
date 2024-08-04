@@ -7,8 +7,6 @@ function StatisticsPage() {
    const [orders, setOrders] = useState([]);
    const type = useSearchParams().get('type');
 
-   //const [startDate, setStartDate] = useState('2024-07-01'); // Điều chỉnh theo nhu cầu
-   //const [endDate, setEndDate] = useState('2024-07-31'); // Điều chỉnh theo nhu cầu
    const [products, setProducts] = useState([
       {
          name: 'Bạc xỉu',
@@ -26,11 +24,9 @@ function StatisticsPage() {
 
    const convertDate = (dateString) => {
       const date = new Date(dateString);
-
       const year = date.getFullYear().toString().slice(-2); // Lấy 2 chữ số cuối của năm
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Thêm 1 vì getMonth() trả về giá trị từ 0-11
       const day = date.getDate().toString().padStart(2, '0'); // Thêm '0' nếu ngày có 1 chữ số
-
       return `${year}/${month}/${day}`;
    };
 
@@ -53,25 +49,17 @@ function StatisticsPage() {
       end.setDate(start.getDate() + 1);    
    }
 
-   const [startDate, setStartDate] = useState(
-      start.toISOString().split('T')[0]
-   ); // Định dạng YYYY-MM-DD
+   const [startDate, setStartDate] = useState(start.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
    const [endDate, setEndDate] = useState(end.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
 
    const handleDateChange = (e) => {
       const isoDate = e.target.value;
       setStartDate(isoDate);
-      
-      // Tạo đối tượng Date từ isoDate
       const date = new Date(isoDate);
-      
-      // Tăng ngày lên 1
       date.setDate(date.getDate() + 1);
-      
-      // Chuyển đổi lại về dạng yyyy-mm-dd
       const nextDate = date.toISOString().split('T')[0];
       setEndDate(nextDate);
-  };
+   };
 
    useEffect(() => {
       const fetchData = async () => {
@@ -114,32 +102,25 @@ function StatisticsPage() {
       fetchData();
    }, [startDate, endDate]);
 
-   const getMonthlyStats = () => {
-      const stats = {};
+   const getTotalStats = () => {
+      let totalAmount = 0;
+      let totalOrders = 0;
+
       orders.forEach((order) => {
-         const date = new Date(order.orderDate);
-         const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-
-         if (!stats[monthYear]) {
-            stats[monthYear] = { totalAmount: 0, orderCount: 0 };
-         }
-
-         stats[monthYear].totalAmount += order.total_amount;
-         stats[monthYear].orderCount += 1;
+         totalAmount += order.total_amount;
+         totalOrders += 1;
       });
 
-      return stats;
+      return { totalAmount, totalOrders };
    };
 
-   const monthlyStats = getMonthlyStats();
+   const totalStats = getTotalStats();
 
    return (
       <div className='container mx-auto p-6 bg-white text-black'>
-         
          {type === 'month' ? (
             <div>
                <h1 className='text-2xl font-bold mb-4'>Thống Kê Theo Tháng</h1>
-               {/* Form chọn ngày */}
                <div className='mb-4'>
                   <label className='block mb-2'>
                      <div>Ngày bắt đầu:</div>
@@ -178,31 +159,29 @@ function StatisticsPage() {
                               {convertDate(order.orderDate)}
                            </th>
                            <th className='py-2 px-4 font-mono'>
-                              {order.total_amount}{' '}
+                              {order.total_amount}
                            </th>
                         </tr>
                      </tbody>
                   ))}
                   <tbody>
-                     {Object.entries(monthlyStats).map(([monthYear, stats]) => (
-                        <tr key={monthYear}>
-                           <td className='py-2 px-4 border-b'> </td>
-                           <td className='py-2 px-4 border-b'>
-                              Đơn trong tháng: {stats.orderCount}
-                           </td>
-                           <td className='py-2 px-4 border-b'>
-                              <span className='mr-1'>Tổng doanh thu:</span>{' '}
-                              {stats.totalAmount.toLocaleString('vi-VN', {
-                                 style: 'currency',
-                                 currency: 'VND',
-                              })}
-                           </td>
-                        </tr>
-                     ))}
+                     <tr>
+                        <td className='py-2 px-4 border-b'></td>
+                        <td className='py-2 px-4 border-b'>
+                           Tổng số đơn: {totalStats.totalOrders}
+                        </td>
+                        <td className='py-2 px-4 border-b'>
+                           <span className='mr-1'>Tổng doanh thu:</span>
+                           {totalStats.totalAmount.toLocaleString('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                           })}
+                        </td>
+                     </tr>
                   </tbody>
                </table>
                <div className='text-2xl font-bold mt-9 mb-9'>
-                  Chi tiết số sản phẩm đã bán:{' '}
+                  Chi tiết số sản phẩm đã bán:
                </div>
                <table className='min-w-full bg-white border border-gray-200 rounded-md shadow-md'>
                   <thead>
@@ -216,12 +195,8 @@ function StatisticsPage() {
                      <tbody key={index}>
                         <tr>
                            <th className='py-2 px-4 font-mono'>{index + 1}</th>
-                           <th className='py-2 px-4 font-mono'>
-                              {product.name}
-                           </th>
-                           <th className='py-2 px-4 font-mono'>
-                              {product.quantity}{' '}
-                           </th>
+                           <th className='py-2 px-4 font-mono'>{product.name}</th>
+                           <th className='py-2 px-4 font-mono'>{product.quantity}</th>
                         </tr>
                      </tbody>
                   ))}
@@ -230,8 +205,6 @@ function StatisticsPage() {
          ) : (
             <div>
                <h1 className='text-2xl font-bold mb-4'>Thống Kê Theo Ngày</h1>
-
-               {/* Form chọn ngày */}
                <div className='mb-4'>
                   <label className='block mb-2'>
                      Ngày bắt đầu:
@@ -242,17 +215,7 @@ function StatisticsPage() {
                         className='ml-2 p-2 border border-gray-300 rounded'
                      />
                   </label>
-                  {/* <label className='block mb-2'>
-                     Ngày kết thúc:
-                     <input
-                        type='date'
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className='ml-2 p-2 border border-gray-300 rounded'
-                     />
-                  </label> */}
                </div>
-
                <table className='min-w-full bg-white border border-gray-200 rounded-md shadow-md'>
                   <thead>
                      <tr>
@@ -276,39 +239,27 @@ function StatisticsPage() {
                               {convertToTime(order.orderDate)}
                            </th>
                            <th className='py-2 px-4 font-mono'>
-                              {order.total_amount}{' '}
+                              {order.total_amount}
                            </th>
-                           <th>
-                              <button
-                                 className={`w-36 py-1 rounded-lg font-mono text-white ${
-                                    order.status === 'đã lên đơn'
-                                       ? 'bg-blue-300'
-                                       : order.status === 'chờ thanh toán'
-                                       ? 'bg-red-300'
-                                       : 'bg-green-300'
-                                 }`}>
-                                 {order.status}
-                              </button>{' '}
-                           </th>
+                           <th className='py-2 px-4 font-mono'>{order.status}</th>
                         </tr>
                      </tbody>
                   ))}
                   <tbody>
-                     {Object.entries(monthlyStats).map(([monthYear, stats]) => (
-                        <tr key={monthYear}>
-                           <td className='py-2 px-4 border-b'> </td>
-                           <td className='py-2 px-4 border-b'>
-                              Đơn trong tháng: {stats.orderCount}
-                           </td>
-                           <td className='py-2 px-4 border-b'>
-                              <span className='mr-1'>Tổng doanh thu:</span>{' '}
-                              {stats.totalAmount.toLocaleString('vi-VN', {
-                                 style: 'currency',
-                                 currency: 'VND',
-                              })}
-                           </td>
-                        </tr>
-                     ))}
+                     <tr>
+                        <td className='py-2 px-4 border-b'></td>
+                        <td className='py-2 px-4 border-b'>
+                           Tổng số đơn: {totalStats.totalOrders}
+                        </td>
+                        <td className='py-2 px-4 border-b'>
+                           <span className='mr-1'>Tổng doanh thu:</span>
+                           {totalStats.totalAmount.toLocaleString('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                           })}
+                        </td>
+                        <td className='py-2 px-4 border-b'></td>
+                     </tr>
                   </tbody>
                </table>
             </div>
@@ -317,10 +268,4 @@ function StatisticsPage() {
    );
 }
 
-export default function Statistics() {
-   return (
-      <Suspense fallback={<div>Loading...</div>}>
-         <StatisticsPage />
-      </Suspense>
-   );
-}
+export default StatisticsPage;

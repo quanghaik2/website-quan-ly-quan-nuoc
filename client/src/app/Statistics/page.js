@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-function StatisticsPage() {
+function Statistics() {
    const [orders, setOrders] = useState([]);
    const type = useSearchParams().get('type');
 
@@ -266,6 +266,11 @@ function StatisticsPage() {
          )}
       </div>
    );
+}
+
+const StatisticsPage = () => {
+   return (<Suspense>
+      <Statistics/></Suspense>)
 }
 
 export default StatisticsPage;

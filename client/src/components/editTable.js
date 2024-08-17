@@ -57,7 +57,7 @@ export default function EditTable({ onClose , onUpdateSuccess, id}) {
 
   return (
     <div className="max-w-md mx-auto mt-20 bg-slate-100 px-7 py-10">
-      <h1 className="text-2xl font-bold mb-4 text-black">Thêm bàn</h1>
+      <h1 className="text-2xl font-bold mb-4 text-black">Sửa tên bàn</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Nhập số bàn</label>

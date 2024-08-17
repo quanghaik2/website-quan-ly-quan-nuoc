@@ -99,7 +99,7 @@ const EditProduct = () => {
     <main className='size-full bg-white h-dvh text-black'>
       <div className="max-w-md mx-auto mt-10">
         
-        <h1 className="text-2xl font-bold mb-4">Thêm sản phẩm</h1>
+        <h1 className="text-2xl font-bold mb-4">SỬa thông tin sản phẩm</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Tên sản phẩm</label>

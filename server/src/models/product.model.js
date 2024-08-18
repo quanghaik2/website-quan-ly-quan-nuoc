@@ -1,20 +1,20 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
 
-const COLLECTION_NAME = 'Products'
-const DOCUMENT_NAME = 'Product'
+const COLLECTION_NAME = 'Products';
+const DOCUMENT_NAME = 'Product';
 
 const productSchema = new Schema(
    {
       productName: {
-        type: String,
-        required: true,
-        alias: 'product_name',
+         type: String,
+         required: true,
+         alias: 'product_name',
       },
       category: {
-        type: String,
-        required: true,
-        default: 'Đồ uống',
-        enum: ['Đồ uống', "Đồ ăn vặt"],
+         type: String,
+         required: true,
+         default: 'Đồ uống',
+         enum: ['Đồ uống', 'Đồ ăn vặt'],
       },
       status: {
          type: Boolean,
@@ -28,13 +28,19 @@ const productSchema = new Schema(
          type: String,
          required: true,
       },
+      recipe: [
+         {
+            ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+            quantity: { type: Number },
+         },
+      ],
    },
    {
       collection: COLLECTION_NAME,
       timestamps: true,
    }
-)
+);
 
-const Product = model(DOCUMENT_NAME, productSchema)
+const Product = model(DOCUMENT_NAME, productSchema);
 
-module.exports = Product
+module.exports = Product;

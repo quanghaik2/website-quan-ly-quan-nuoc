@@ -25,6 +25,6 @@ const ingredientSchema = new mongoose.Schema(
       collection: COLLECTION_NAME,
    }
 );
-
+const Ingredient = mongoose.model(DOCUMENT_NAME, ingredientSchema);
 //Export the model
-module.exports = mongoose.model(DOCUMENT_NAME, ingredientSchema);
+module.exports = Ingredient;

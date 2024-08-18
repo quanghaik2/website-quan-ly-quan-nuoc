@@ -20,6 +20,6 @@ const storageSchema = new mongoose.Schema(
       collection: COLLECTION_NAME,
    }
 );
-
+const Storage = mongoose.model(DOCUMENT_NAME, storageSchema);
 //Export the model
-module.exports = mongoose.model(DOCUMENT_NAME, storageSchema);
+module.exports = Storage;

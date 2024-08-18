@@ -23,6 +23,6 @@ const StorageStatisticSchema = new mongoose.Schema(
       collection: COLLECTION_NAME,
    }
 );
-
+const StorageStatistic = mongoose.model(DOCUMENT_NAME, StorageStatisticSchema);
 //Export the model
-module.exports = mongoose.model(DOCUMENT_NAME, StorageStatisticSchema);
+module.exports = StorageStatistic;

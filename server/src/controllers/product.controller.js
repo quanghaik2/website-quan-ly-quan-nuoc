@@ -24,9 +24,9 @@ class Product {
    updateProduct = async (req, res, next) => {
       try {
          const { id } = req.params;
-         const { productName, price, category, image } = req.body;
+         const { productName, price, category, image, recipe } = req.body;
 
-         if (!productName || !price || !category || !image) {
+         if (!productName || !price || !category || !image || !recipe) {
             return res
                .status(400)
                .json({ message: 'Chưa nhập đầy đủ thông tin sản phẩm' });
@@ -34,7 +34,7 @@ class Product {
 
          const updatedProduct = await models.product.findByIdAndUpdate(
             id,
-            { productName, price, category, image },
+            { productName, price, category, image, recipe },
             { new: true }
          );
 

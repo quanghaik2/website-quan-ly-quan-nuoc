@@ -86,7 +86,9 @@ class Product {
 
    getProduct = async (req, res, next) => {
       try {
-         const product = await models.product.findById(req.query.id);
+         const product = await models.product
+            .findById(req.query.id)
+            .populate('recipe.ingredient');
 
          if (!product) {
             return res.status(400).json({

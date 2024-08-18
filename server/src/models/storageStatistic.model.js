@@ -13,7 +13,10 @@ const StorageStatisticSchema = new mongoose.Schema(
       },
       recipe: [
          {
-            ingredient: { type: Schema.Types.ObjectId, ref: 'Ingredient' },
+            ingredient: {
+               type: mongoose.Schema.Types.ObjectId,
+               ref: 'Ingredient',
+            },
             quantity: { type: Number },
          },
       ],

@@ -42,12 +42,10 @@ class Ingredient {
                .json({ message: 'Nguyên liệu không tồn tại' });
          }
 
-         return res
-            .status(200)
-            .json({
-               message: 'Cập nhật nguyên liệu thành công',
-               updatedIngredient,
-            });
+         return res.status(200).json({
+            message: 'Cập nhật nguyên liệu thành công',
+            updatedIngredient,
+         });
       } catch (error) {
          next(error);
       }
@@ -67,6 +65,32 @@ class Ingredient {
          }
 
          return res.status(200).json({ message: 'Xóa nguyên liệu thành công' });
+      } catch (error) {
+         next(error);
+      }
+   };
+
+   getAllIngredients = async (req, res) => {
+      try {
+         const ingredients = await models.ingredient.find();
+         return res.status(200).json({ ingredients });
+      } catch (error) {
+         next(error);
+      }
+   };
+
+   getIngredientById = async (req, res) => {
+      try {
+         const { id } = req.params;
+         const ingredient = await models.ingredient.findById(id);
+
+         if (!ingredient) {
+            return res
+               .status(404)
+               .json({ message: 'Nguyên liệu không tồn tại' });
+         }
+
+         return res.status(200).json({ ingredient });
       } catch (error) {
          next(error);
       }

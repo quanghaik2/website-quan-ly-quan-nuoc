@@ -95,9 +95,38 @@ class Statistics {
                }
             });
          });
-         stats.total = orders.reduce((total, order) => {
+         stats.income = orders.reduce((total, order) => {
             return total + order.total_amount;
          }, 0);
+
+         const storageImport = await models.storageStatistic
+            .find({
+               createdAt: {
+                  $gte: new Date(startDate),
+                  $lte: new Date(endDate),
+               },
+            })
+            .populate('recipe.ingredient');
+         const storage = await models.storage.find().populate('ingredient');
+
+         let ingredients = [];
+         storageImport.recipe.forEach((item) => {
+            storage.forEach((storageItem) => {
+               if (item.ingredient._id == storageItem.ingredient._id) {
+                  ingredients.push({
+                     ingredient: storageItem.ingredient,
+                     quantity: item.quantity - storageItem.quantity,
+                  });
+               }
+            });
+         });
+
+         const cost = ingredients.reduce((total, item) => {
+            return total + item.quantity * item.ingredient.price;
+         }, 0);
+
+         stats.cost = cost;
+         stats.profit = stats.income - stats.cost;
 
          return res.status(200).json(stats);
       } catch (error) {

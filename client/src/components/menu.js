@@ -127,6 +127,43 @@ const Menu = () => {
                            </a>
                         </div>
                      )}
+                     {role === 'owner' && (
+                        <div
+                        className='text-white mb-6 cursor-pointer'
+                        onClick={() => {
+                           toggleSubMenu('nguyen-lieu');
+                        }}>
+                        <div
+                           className={`flex px-3 py-3 rounded-xl items-center ${
+                              activeItem === 'nguyen-lieu'
+                                 ? 'bg-blue-500'
+                                 : ''
+                           }`}>
+                           <TbReportMoney className='w-5 h-5 mr-1' />
+                           {!collapsed && 'Quản lý nguyên liệu'}
+                        </div>
+                        {selectedMenu === 'nguyen-lieu' && (
+                           <div className='ml-8 mt-2'>
+                              <a
+                                 href='/Statistics?type=date'
+                                 className={`text-white py-1 pl-1 mb-2 ${
+                                    activeItem === 'create' ? 'bg-blue-500' : ''
+                                 }`}
+                                 onClick={(e) => handleSubItemClick(e, 'create')}>
+                                 <div>Thêm nguyên liệu</div>
+                              </a>
+                              <a
+                                 href='/Statistics?type=month'
+                                 className={`text-white py-1 pl-1 mb-2 ${
+                                    activeItem === 'update' ? 'bg-blue-500' : ''
+                                 }`}
+                                 onClick={(e) => handleSubItemClick(e, 'update')}>
+                                 <div>sửa nguyên liệu</div>
+                              </a>
+                           </div>
+                        )}
+                     </div>
+                     )}
                      <div
                         className='text-white mb-6 cursor-pointer'
                         onClick={() => {

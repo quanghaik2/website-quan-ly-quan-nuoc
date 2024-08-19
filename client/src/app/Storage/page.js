@@ -66,7 +66,7 @@ const CreateStorageStatisticPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/storageStatistic`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/storage`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

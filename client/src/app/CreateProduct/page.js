@@ -101,8 +101,7 @@ export default function AddProduct() {
       if (response.status === 200) {
         toast.success('Thêm sản phẩm thành công');
         router.push('/ProductManager');
-      } else {
-        toast.error(recipe);  
+      } else { 
         toast.error(data.message || 'Thêm sản phẩm thất bại');
 
       }

@@ -5,20 +5,22 @@ import { FaPen } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from 'sonner';
 
-const ProductList = ({ searchTerm }) => {
+const IngredientList = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);
   const [showFormDelete, setShowFormDelete] = useState(false);
   const [idProduct, setIdProduct] = useState(null);
+  const [ingredients, setIngredients] = useState([]);
+  const [idIngredient, setIdIngredient] = useState(null);
 
-  const fetchProducts = async () => {
+  const fetchIngredient = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
       if (response.status !== 200) {
-        toast.error('Lấy sản phẩm thất bại');
+        toast.error('Lấy sản nguyên liệu thất bại');
         return;
       }
       const data = await response.json();
-      setProducts(data.product);
+      setIngredients(data.ingredients);
     } catch (error) {
       toast.error('Error fetching products:', error);
     }
@@ -27,7 +29,7 @@ const ProductList = ({ searchTerm }) => {
   const handleShowFormDelete = (id) => {
     window.scrollTo(0, 0);
     setShowFormDelete(true);
-    setIdProduct(id);
+    setIdIngredient(id);
   };
 
   const handleCloseFormData = () => {
@@ -36,15 +38,15 @@ const ProductList = ({ searchTerm }) => {
 
   const handleDeleteSuccess = () => {
     setShowFormDelete(false);
-    fetchProducts();
+    fetchIngredient();
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchIngredient();
   }, []);
 
-  const filteredProducts = products.filter(product =>
-    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredIngredient = ingredients.filter(ingredient =>
+    ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -53,9 +55,9 @@ const ProductList = ({ searchTerm }) => {
         <div className="absolute inset-0">
           <FormDelete
             onClose={handleCloseFormData}
-            id={idProduct}
-            endpoint={'api/product/delete'}
-            type='product'
+            id={idIngredient}
+            endpoint={'api/ingredient/delete'}
+            type='ingredient'
             onDeleteSuccess={handleDeleteSuccess}
           />
         </div>
@@ -65,25 +67,23 @@ const ProductList = ({ searchTerm }) => {
           <thead className='mb-10'>
             <tr className='bg-white mb-10'>
               <th className='px-4 py-2 text-center'>STT</th>
-              <th className='px-4 py-2 text-center'>Ảnh</th>
               <th className='px-4 py-2 text-center'>Tên sản phẩm</th>
               <th className='px-4 py-2 text-center'>Giá</th>
+              <th className='px-4 py-2 text-center'>Đơn vị</th>
               <th className='px-4 py-2 text-center'></th>
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product, index) => (
-                <tr key={product._id} className={(index + 1) % 2 === 0 ? 'bg-white' : 'bg-pink-50'}>
+            {filteredIngredient.length > 0 ? (
+              filteredIngredient.map((ingredient, index) => (
+                <tr key={ingredient._id} className={(index + 1) % 2 === 0 ? 'bg-white' : 'bg-pink-50'}>
                   <td className='px-4 py-2 text-center'>{index + 1}</td>
-                  <td className='px-4 py-2 flex justify-center'>
-                    <img className='w-10 h-10' src={product.image} alt={product.productName} />
-                  </td>
-                  <td className='px-4 py-2 text-center'>{product.productName}</td>
-                  <td className='px-4 py-2 text-center'>{product.price}</td>
+                  <td className='px-4 py-2 text-center'>{ingredient.name}</td>
+                  <td className='px-4 py-2 text-center'>{ingredient.price}</td>
+                  <td className='px-4 py-2 text-center'>{ingredient.unit}</td>
                   <td className='px-4 py-2 flex justify-center items-center'>
-                    <a href={`/EditProduct?id=${product._id}`}><FaPen className='text-green-500 cursor-pointer' /></a>
-                    <button onClick={() => handleShowFormDelete(product._id)}>
+                    <a href={`/EditIngredient?id=${ingredient._id}`}><FaPen className='text-green-500 cursor-pointer' /></a>
+                    <button onClick={() => handleShowFormDelete(ingredient._id)}>
                       <MdDeleteForever className='text-red-500 ml-1 cursor-pointer' />
                     </button>
                   </td>
@@ -91,7 +91,7 @@ const ProductList = ({ searchTerm }) => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className='px-4 py-2 text-center'>Không tìm thấy sản phẩm nào</td>
+                <td colSpan="5" className='px-4 py-2 text-center'>Không tìm thấy nguyên liệu nào</td>
               </tr>
             )}
           </tbody>
@@ -101,4 +101,4 @@ const ProductList = ({ searchTerm }) => {
   );
 };
 
-export default ProductList;
+export default IngredientList;

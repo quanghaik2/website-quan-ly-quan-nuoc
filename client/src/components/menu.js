@@ -203,6 +203,12 @@ const Menu = () => {
                                  onClick={(e) => handleSubItemClick(e, 'moth')}>
                                  <div>Theo tháng</div>
                               </a>
+                              <a
+                                 href='/DailyStatistics'
+                                 className={`text-white py-1 pl-1 mb-2 `}
+                                 onClick={(e) => handleSubItemClick(e, 'moth')}>
+                                 <div>Kiểm tra lãi của ngày</div>
+                              </a>
                            </div>
                         )}
                      </div>

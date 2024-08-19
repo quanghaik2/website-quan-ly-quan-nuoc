@@ -101,34 +101,64 @@ class Statistics {
 
          const storageImport = await models.storageStatistic
             .find({
+               status: 'in',
                createdAt: {
                   $gte: new Date(startDate),
                   $lte: new Date(endDate),
                },
             })
             .populate('recipe.ingredient');
-         const storage = await models.storage.find().populate('ingredient');
+         const storage = await models.storage
+            .find()
+            .populate('ingredient')
+            .exec();
 
          let ingredients = [];
-         storageImport.recipe.forEach((item) => {
-            storage.forEach((storageItem) => {
-               if (item.ingredient._id == storageItem.ingredient._id) {
-                  ingredients.push({
-                     ingredient: storageItem.ingredient,
-                     quantity: item.quantity - storageItem.quantity,
+         let newStorageImport = [];
+
+         storageImport.forEach((item) => {
+            item.recipe.forEach((recipeItem) => {
+               if (
+                  !newStorageImport.some(
+                     (newItem) =>
+                        newItem.ingredient._id == recipeItem.ingredient._id
+                  )
+               )
+                  newStorageImport.push(recipeItem);
+               else {
+                  newStorageImport.forEach((newItem) => {
+                     if (newItem.ingredient._id == recipeItem.ingredient._id) {
+                        newItem.quantity += recipeItem.quantity;
+                     }
                   });
                }
             });
          });
 
-         const cost = ingredients.reduce((total, item) => {
+         newStorageImport.forEach((item) => {
+            storage.forEach((storageItem) => {
+               if (
+                  item.ingredient._id.toString() ==
+                  storageItem.ingredient._id.toString()
+               ) {
+                  ingredients.push({
+                     ingredient: item.ingredient,
+                     quantity: item.quantity - storageItem.quantity,
+                  });
+               }
+            });
+         });
+         const cost = newStorageImport.reduce((total, item) => {
             return total + item.quantity * item.ingredient.price;
          }, 0);
 
          stats.cost = cost;
          stats.profit = stats.income - stats.cost;
 
-         return res.status(200).json(stats);
+         return res.status(200).json({
+            stats,
+            ingredients,
+         });
       } catch (error) {
          next(error);
       }

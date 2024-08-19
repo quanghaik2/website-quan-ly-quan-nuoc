@@ -1,4 +1,5 @@
 const routes = (app) => {
+   app.use('/api/storage', require('./storage'));
    app.use('/api/ingredient', require('./ingredient'));
    app.use('/api/statistics', require('./statistics'));
    app.use('/api/auth', require('./auth'));

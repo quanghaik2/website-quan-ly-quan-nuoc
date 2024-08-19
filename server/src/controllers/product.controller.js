@@ -67,7 +67,9 @@ class Product {
 
    getAll = async (req, res, next) => {
       try {
-         const product = await models.product.find();
+         const product = await models.product
+            .find()
+            .populate('recipe.ingredient');
 
          if (!product) {
             return res.status(400).json({

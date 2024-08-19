@@ -8,6 +8,8 @@ import { TbTableAlias, TbReportMoney } from 'react-icons/tb';
 import { IoMenu, IoCloseSharp } from 'react-icons/io5';
 import { RiDrinksFill } from 'react-icons/ri';
 import { IoIosHome } from 'react-icons/io';
+import { TbSalt } from "react-icons/tb";  
+import { MdOutlineStorage } from "react-icons/md";
 import { UserContext } from '@/contexts';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -129,40 +131,45 @@ const Menu = () => {
                      )}
                      {role === 'owner' && (
                         <div
-                        className='text-white mb-6 cursor-pointer'
-                        onClick={() => {
-                           toggleSubMenu('nguyen-lieu');
-                        }}>
-                        <div
-                           className={`flex px-3 py-3 rounded-xl items-center ${
-                              activeItem === 'nguyen-lieu'
-                                 ? 'bg-blue-500'
-                                 : ''
-                           }`}>
-                           <TbReportMoney className='w-5 h-5 mr-1' />
-                           {!collapsed && 'Quản lý nguyên liệu'}
+                           className='text-white mb-6 cursor-pointer'
+                           onClick={() => {
+                              handleItemClick('quan-ly-nguyen-lieu');
+                              toggleSubMenu('nguyenlieu');
+                           }}>   
+                           <a
+                              href='/IngredientManager'
+                              className={`flex px-3 py-3 rounded-xl items-center ${
+                                 activeItem === 'quan-ly-nguyen-lieu'
+                                    ? 'bg-blue-500'
+                                    : ''
+                              }`}>
+                              <TbSalt className='mr-1' />
+                              {!collapsed && (
+                                 <a href='/IngredientManager'>Quản lý nguyên liệu</a>
+                              )}
+                           </a>
                         </div>
-                        {selectedMenu === 'nguyen-lieu' && (
-                           <div className='ml-8 mt-2'>
-                              <a
-                                 href='/Statistics?type=date'
-                                 className={`text-white py-1 pl-1 mb-2 ${
-                                    activeItem === 'create' ? 'bg-blue-500' : ''
-                                 }`}
-                                 onClick={(e) => handleSubItemClick(e, 'create')}>
-                                 <div>Thêm nguyên liệu</div>
-                              </a>
-                              <a
-                                 href='/Statistics?type=month'
-                                 className={`text-white py-1 pl-1 mb-2 ${
-                                    activeItem === 'update' ? 'bg-blue-500' : ''
-                                 }`}
-                                 onClick={(e) => handleSubItemClick(e, 'update')}>
-                                 <div>sửa nguyên liệu</div>
-                              </a>
-                           </div>
-                        )}
-                     </div>
+                     )}
+                     {role === 'owner' && (
+                        <div
+                           className='text-white mb-6 cursor-pointer'
+                           onClick={() => {
+                              handleItemClick('quan-ly-kho');
+                              toggleSubMenu('qlkho');
+                           }}>   
+                           <a
+                              href='/Storage'
+                              className={`flex px-3 py-3 rounded-xl items-center ${
+                                 activeItem === 'quan-ly-kho'
+                                    ? 'bg-blue-500'
+                                    : ''
+                              }`}>
+                              <MdOutlineStorage className='mr-1' />
+                              {!collapsed && (
+                                 <a href='/Storage'>Nhập kho</a>
+                              )}
+                           </a>
+                        </div>
                      )}
                      <div
                         className='text-white mb-6 cursor-pointer'

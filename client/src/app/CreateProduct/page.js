@@ -16,6 +16,23 @@ export default function AddProduct() {
   const [ingredients, setIngredients] = useState([]);
   // const ingredients = ['Ingredient1', 'Ingredient2', 'Ingredient3']; // Example ingredient list
 
+  const fetchIngredients = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
+      if (response.status !== 200) {
+        toast.error('Lấy sản phẩm thất bại');
+        return;
+      }
+      const data = await response.json();
+      setIngredients(data.ingredients);
+    } catch (error) {
+      toast.error('Error fetching products:', error);
+    }
+  };
+
+  useEffect( () => {
+    fetchIngredients();
+  }, [])
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,23 +47,6 @@ export default function AddProduct() {
       ingredient: formData.get(`ingredient_${index}`),
       quantity: formData.get(`quantity_${index}`)
     }));
-
-    useEffect( async() =>{
-      try {
-      
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/`);
-        
-        if (response.status !== 200) {
-          toast.error('Lấy bàn thất bại');
-          return;
-        }
-        const data = await response.json();
-        
-      } catch (error) {
-        toast.error('Error fetching tables:', error);
-      }
-    }, [])
-
     // Clear previous errors
     setErrors({});
 
@@ -102,7 +102,9 @@ export default function AddProduct() {
         toast.success('Thêm sản phẩm thành công');
         router.push('/ProductManager');
       } else {
+        toast.error(recipe);  
         toast.error(data.message || 'Thêm sản phẩm thất bại');
+
       }
     } catch (error) {
       toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
@@ -126,8 +128,10 @@ export default function AddProduct() {
 
   return (
     <main className='min-h-screen w-full bg-white text-black'>
+      {console.log(ingredients)}
       <div className="max-w-md mx-auto mt-10">
         <h1 className="text-2xl font-bold mb-4">Thêm sản phẩm</h1>
+        {console.log(ingredients)}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Tên sản phẩm</label>
@@ -196,8 +200,8 @@ export default function AddProduct() {
                   >
                     <option value="" disabled>Chọn nguyên liệu</option>
                     {ingredients.map((ingredient) => (
-                      <option key={ingredient} value={ingredient}>
-                        {ingredient}
+                      <option key={ingredient._id} value={ingredient._id}>
+                        {ingredient.name}
                       </option>
                     ))}
                   </select>

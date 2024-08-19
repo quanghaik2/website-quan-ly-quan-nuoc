@@ -47,7 +47,12 @@ const EditProduct = () => {
 
   const handleRecipeChange = (index, field, value) => {
     const newRecipe = [...recipe];
-    newRecipe[index][field] = value;
+    if (field === 'ingredient') {
+      const ingredient = ingredients.find(ingredient => ingredient.name === value);
+      newRecipe[index][field] = ingredient ? ingredient._id : '';
+    } else {
+      newRecipe[index][field] = value;
+    }
     setRecipe(newRecipe);
   };
 
@@ -95,13 +100,23 @@ const EditProduct = () => {
       return;
     }
 
+    // Tìm ingredientId dựa trên ingredient.name
+    const updatedRecipe = recipe.map(item => {
+      const ingredient = ingredients.find(ing => ing.name === item.ingredient);
+      return {
+        ingredientId: ingredient ? ingredient._id : '',
+        ingredient: item.ingredient,
+        quantity: item.quantity,
+      };
+    });
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/update/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productName, price, category, image, recipe }),
+        body: JSON.stringify({ productName, price, category, image, recipe: updatedRecipe }),
       });
 
       const data = await response.json();

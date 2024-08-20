@@ -10,11 +10,11 @@ const EditProduct = () => {
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('');
   const [recipe, setRecipe] = useState([{ ingredient: '', quantity: '' }]);
-  const searchParams = useSearchParams();
   const [errors, setErrors] = useState({});
+  const [ingredients, setIngredients] = useState([]);
+  const searchParams = useSearchParams();
   const router = useRouter();
   const productTypes = ['Đồ uống', 'Đồ ăn vặt'];
-  const [ingredients, setIngredients] = useState([]);
   const id = searchParams.get('id');
 
   useEffect(() => {
@@ -22,18 +22,15 @@ const EditProduct = () => {
       try {
         const ingredientResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
         const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/getProduct?id=${id}`);
-  
-        if (productResponse.status !== 200) {
-          toast.error('Lấy sản phẩm thất bại');
+
+        if (!productResponse.ok || !ingredientResponse.ok) {
+          toast.error('Lấy sản phẩm hoặc nguyên liệu thất bại');
           return;
         }
-  
+
         const productData = await productResponse.json();
         const ingredientData = await ingredientResponse.json();
-  
-        console.log("Product Data:", productData);  // Kiểm tra dữ liệu sản phẩm
-        console.log("Ingredient Data:", ingredientData);  // Kiểm tra dữ liệu nguyên liệu
-  
+
         setProductName(productData.product.productName);
         setProductPrice(productData.product.price);
         setImage(productData.product.image);
@@ -44,17 +41,19 @@ const EditProduct = () => {
         toast.error('Có lỗi xảy ra khi lấy thông tin sản phẩm');
       }
     };
-  
-    fetchProduct();
+
+    if (id) {
+      fetchProduct();
+    } else {
+      toast.error('ID sản phẩm không hợp lệ');
+    }
   }, [id]);
-  
-  
 
   const handleRecipeChange = (index, field, value) => {
     const newRecipe = [...recipe];
     if (field === 'ingredient') {
-      const ingredient = ingredients.find(ingredient => ingredient.name === value);
-      newRecipe[index][field] = ingredient ? ingredient._id : '';
+      const ingredient = ingredients.find(ing => ing.name === value);
+      newRecipe[index].ingredient = ingredient ? ingredient._id : '';
     } else {
       newRecipe[index][field] = value;
     }
@@ -69,15 +68,9 @@ const EditProduct = () => {
     setRecipe(recipe.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Clear previous errors
-    setErrors({});
-
-    // Validation
+  const validateForm = () => {
     const newErrors = {};
-    if (!productName) {
+    if (!productName.trim()) {
       newErrors.productName = 'Tên sản phẩm không được để trống';
     }
     if (!/^\d+$/.test(price) || price <= 0) {
@@ -86,13 +79,12 @@ const EditProduct = () => {
     if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image)) {
       newErrors.image = 'Ảnh sản phẩm phải hợp lệ';
     }
-    if (!category) {
+    if (!category.trim()) {
       newErrors.category = 'Loại sản phẩm không được để trống';
     }
 
-    // Validate recipe
     recipe.forEach((item, index) => {
-      if (!item.ingredient) {
+      if (!item.ingredient.trim()) {
         newErrors[`ingredient_${index}`] = 'Nguyên liệu không được để trống';
       }
       if (!item.quantity || item.quantity <= 0) {
@@ -100,22 +92,21 @@ const EditProduct = () => {
       }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    // Update recipe with ingredient IDs
-    const updatedRecipe = recipe.map(item => {
-      const ingredient = ingredients.find(ing => ing.name === item.ingredient);
-      return {
-        ingredientId: ingredient ? ingredient._id : '',
-        ingredient: item.ingredient,
-        quantity: item.quantity,
-      };
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
 
     try {
+      const updatedRecipe = recipe.map(item => ({
+        ingredient: item.ingredient,
+        quantity: item.quantity,
+      }));
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/update/${id}`, {
         method: 'PUT',
         headers: {
@@ -124,12 +115,11 @@ const EditProduct = () => {
         body: JSON.stringify({ productName, price, category, image, recipe: updatedRecipe }),
       });
 
-      const data = await response.json();
-
-      if (response.status === 200) {
+      if (response.ok) {
         toast.success('Sửa sản phẩm thành công');
         router.push('/ProductManager');
       } else {
+        const data = await response.json();
         toast.error(data.message || 'Sửa sản phẩm thất bại');
       }
     } catch (error) {
@@ -248,20 +238,25 @@ const EditProduct = () => {
             >
               Thêm nguyên liệu
             </button>
+            </div>
+          <div className="flex justify-end mt-6">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Lưu thay đổi
+            </button>
           </div>
-          <button type="submit" className="bg-green-500 text-white p-2 rounded-md">
-            Lưu
-          </button>
         </form>
       </div>
     </main>
   );
 };
 
-const EditProductPage = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <EditProduct />
-  </Suspense>
-);
-
-export default EditProductPage;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Đang tải...</div>}>
+      <EditProduct />
+    </Suspense>
+  );
+}

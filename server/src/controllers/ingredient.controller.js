@@ -1,7 +1,7 @@
 const models = require('../models');
 
 class Ingredient {
-   createIngredient = async (req, res) => {
+   createIngredient = async (req, res, next) => {
       try {
          const { name, unit, price } = req.body;
          const newIngredient = new models.ingredient({
@@ -19,7 +19,7 @@ class Ingredient {
       }
    };
 
-   updateIngredient = async (req, res) => {
+   updateIngredient = async (req, res, next) => {
       try {
          const { id } = req.params;
          const { name, unit, price } = req.body;
@@ -51,7 +51,7 @@ class Ingredient {
       }
    };
 
-   deleteIngredient = async (req, res) => {
+   deleteIngredient = async (req, res, next) => {
       try {
          const { id } = req.params;
          const deletedIngredient = await models.ingredient.findByIdAndDelete(
@@ -70,7 +70,7 @@ class Ingredient {
       }
    };
 
-   getAllIngredients = async (req, res) => {
+   getAllIngredients = async (req, res, next) => {
       try {
          const ingredients = await models.ingredient.find();
          return res.status(200).json({ ingredients });
@@ -79,7 +79,7 @@ class Ingredient {
       }
    };
 
-   getIngredientById = async (req, res) => {
+   getIngredientById = async (req, res, next) => {
       try {
          const { id } = req.params;
          const ingredient = await models.ingredient.findById(id);

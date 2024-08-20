@@ -271,12 +271,12 @@ const UpdateOrder = () => {
             className={`mt-1 block  p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 ${
               status === 'đã lên đơn' ? 'bg-blue-200' :
               status === 'chờ thanh toán' ? 'bg-red-200' :
-              status === 'Hoàn thành' ? 'bg-green-200' : ''
+              status === 'hoàn thành' ? 'bg-green-200' : ''
             }`}
           >
             <option value="đã lên đơn" className="bg-white">Đã lên đơn</option>
             <option value="chờ thanh toán" className="bg-white">Chờ thanh toán</option>
-            <option value="Hoàn thành" className="bg-white">Hoàn thành</option>
+            <option value="hoàn thành" className="bg-white">Hoàn thành</option>
           </select>
         </div>
 

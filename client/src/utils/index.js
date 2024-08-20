@@ -11,7 +11,7 @@ const getDateNow = () => {
 }
 
 const checkIdTable = (tableId, orders) => {
-    return orders.some((order) => order.tableId._id === tableId);
+    return orders.some((order) => order.tableId._id === tableId && order.status !== 'hoàn thành');
 }
 
 const convertDateFormat = (mongoDate) => {

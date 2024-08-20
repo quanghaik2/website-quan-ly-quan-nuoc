@@ -8,6 +8,8 @@ import { TbTableAlias, TbReportMoney } from 'react-icons/tb';
 import { IoMenu, IoCloseSharp } from 'react-icons/io5';
 import { RiDrinksFill } from 'react-icons/ri';
 import { IoIosHome } from 'react-icons/io';
+import { TbSalt } from "react-icons/tb";  
+import { MdOutlineStorage } from "react-icons/md";
 import { UserContext } from '@/contexts';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -127,6 +129,48 @@ const Menu = () => {
                            </a>
                         </div>
                      )}
+                     {role === 'owner' && (
+                        <div
+                           className='text-white mb-6 cursor-pointer'
+                           onClick={() => {
+                              handleItemClick('quan-ly-nguyen-lieu');
+                              toggleSubMenu('nguyenlieu');
+                           }}>   
+                           <a
+                              href='/IngredientManager'
+                              className={`flex px-3 py-3 rounded-xl items-center ${
+                                 activeItem === 'quan-ly-nguyen-lieu'
+                                    ? 'bg-blue-500'
+                                    : ''
+                              }`}>
+                              <TbSalt className='mr-1' />
+                              {!collapsed && (
+                                 <a href='/IngredientManager'>Quản lý nguyên liệu</a>
+                              )}
+                           </a>
+                        </div>
+                     )}
+                     {role === 'owner' && (
+                        <div
+                           className='text-white mb-6 cursor-pointer'
+                           onClick={() => {
+                              handleItemClick('quan-ly-kho');
+                              toggleSubMenu('qlkho');
+                           }}>   
+                           <a
+                              href='/Storage'
+                              className={`flex px-3 py-3 rounded-xl items-center ${
+                                 activeItem === 'quan-ly-kho'
+                                    ? 'bg-blue-500'
+                                    : ''
+                              }`}>
+                              <MdOutlineStorage className='mr-1' />
+                              {!collapsed && (
+                                 <a href='/Storage'>Nhập kho</a>
+                              )}
+                           </a>
+                        </div>
+                     )}
                      <div
                         className='text-white mb-6 cursor-pointer'
                         onClick={() => {
@@ -158,6 +202,12 @@ const Menu = () => {
                                  }`}
                                  onClick={(e) => handleSubItemClick(e, 'moth')}>
                                  <div>Theo tháng</div>
+                              </a>
+                              <a
+                                 href='/DailyStatistics'
+                                 className={`text-white py-1 pl-1 mb-2 `}
+                                 onClick={(e) => handleSubItemClick(e, 'moth')}>
+                                 <div>Kiểm tra lãi của ngày</div>
                               </a>
                            </div>
                         )}

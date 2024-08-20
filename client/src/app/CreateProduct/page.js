@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -9,9 +9,33 @@ export default function AddProduct() {
   const [price, setProductPrice] = useState('');
   const [image, setImage] = useState('');
   const [category, setProductType] = useState('');
+  const [recipe, setRecipe] = useState([{ ingredient: '', quantity: '' }]);
   const [errors, setErrors] = useState({});
+  const [ingredients, setIngredients] = useState([]);
   const router = useRouter();
   const productTypes = ['Đồ uống', 'Đồ ăn vặt'];
+
+  const fetchIngredients = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
+      if (response.status !== 200) {
+        toast.error('Lấy nguyên liệu thất bại');
+        return;
+      }
+      const data = await response.json();
+      if (data.ingredients) {
+        setIngredients(data.ingredients);
+      } else {
+        toast.error('Dữ liệu nguyên liệu không hợp lệ');
+      }
+    } catch (error) {
+      toast.error('Error fetching ingredients');
+    }
+  };
+
+  useEffect(() => {
+    fetchIngredients();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +46,12 @@ export default function AddProduct() {
     const category = formData.get('category');
     const image = formData.get('image');
 
+    // Get recipe data from form
+    const recipeData = recipe.map((item, index) => ({
+      ingredient: formData.get(`ingredient_${index}`),
+      quantity: formData.get(`quantity_${index}`)
+    }));
+
     // Clear previous errors
     setErrors({});
 
@@ -30,7 +60,7 @@ export default function AddProduct() {
     if (!productName) {
       newErrors.productName = 'Vui lòng nhập tên sản phẩm';
     }
-    if (!/^\d+$/.test(price) ||  price < 1) {
+    if (!/^\d+$/.test(price) || price <= 0) {
       newErrors.price = 'Giá sản phẩm phải hợp lệ';
     }
     if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image)) {
@@ -39,6 +69,22 @@ export default function AddProduct() {
     if (!category) {
       newErrors.category = 'Loại sản phẩm không được để trống';
     }
+
+    // Check for duplicate ingredients
+    const ingredientSet = new Set();
+    recipeData.forEach((item, index) => {
+      if (!item.ingredient) {
+        newErrors[`ingredient_${index}`] = 'Vui lòng chọn nguyên liệu';
+      } else if (ingredientSet.has(item.ingredient)) {
+        newErrors[`ingredient_${index}`] = 'Nguyên liệu đã được chọn ở trường khác';
+      } else {
+        ingredientSet.add(item.ingredient);
+      }
+
+      if (!item.quantity || item.quantity <= 0) {
+        newErrors[`quantity_${index}`] = 'Số lượng phải lớn hơn 0';
+      }
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -51,13 +97,12 @@ export default function AddProduct() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productName, price, category, image }),
+        body: JSON.stringify({ productName, price, category, image, recipe: recipeData }),
       });
 
       const data = await response.json();
-      console.log(data);
 
-      if (response.status  === 200) {
+      if (response.ok) {
         toast.success('Thêm sản phẩm thành công');
         router.push('/ProductManager');
       } else {
@@ -68,8 +113,23 @@ export default function AddProduct() {
     }
   };
 
+  const handleRecipeChange = (index, field, value) => {
+    const newRecipe = [...recipe];
+    newRecipe[index][field] = value;
+    setRecipe(newRecipe);
+  };
+
+  const addRecipeItem = () => {
+    setRecipe([...recipe, { ingredient: '', quantity: '' }]);
+  };
+
+  const removeRecipeItem = (index) => {
+    const newRecipe = recipe.filter((_, i) => i !== index);
+    setRecipe(newRecipe);
+  };
+
   return (
-    <main className='size-full bg-white h-dvh text-black'>
+    <main className='min-h-screen w-full bg-white text-black'>
       <div className="max-w-md mx-auto mt-10">
         <h1 className="text-2xl font-bold mb-4">Thêm sản phẩm</h1>
         <form onSubmit={handleSubmit}>
@@ -127,12 +187,64 @@ export default function AddProduct() {
               <p className="text-xs mt-1 text-red-500">{errors.category}</p>
             )}
           </div>
-          <button type="submit" className="bg-green-500 text-white p-2 rounded-md">
-            Lưu
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Công thức</label>
+            {recipe.map((item, index) => (
+              <div key={index} className="mb-2">
+                <div className="flex items-center">
+                  <select
+                    name={`ingredient_${index}`}
+                    value={item.ingredient}
+                    onChange={(e) => handleRecipeChange(index, 'ingredient', e.target.value)}
+                    className="mr-2 p-2 border border-gray-300 rounded-md shadow-sm"
+                  >
+                    <option value="" disabled>Chọn nguyên liệu</option>
+                    {ingredients && ingredients.length > 0 ? (
+                      ingredients.map((ingredient) => (
+                        <option key={ingredient._id} value={ingredient._id}>
+                          {ingredient.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Không có nguyên liệu</option>
+                    )}
+                  </select>
+                  <input
+                    name={`quantity_${index}`}
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) => handleRecipeChange(index, 'quantity', e.target.value)}
+                    className="p-2 border border-gray-300 rounded-md shadow-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeRecipeItem(index)}
+                    className="ml-2 p-2 bg-red-500 text-white rounded-md"
+                  >
+                    Xóa
+                  </button>
+                </div>
+                {errors[`ingredient_${index}`] && (
+                  <p className="text-xs mt-1 text-red-500">{errors[`ingredient_${index}`]}</p>
+                )}
+                {errors[`quantity_${index}`] && (
+                  <p className="text-xs mt-1 text-red-500">{errors[`quantity_${index}`]}</p>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addRecipeItem}
+              className="mt-2 p-2 bg-blue-500 text-white rounded-md"
+            >
+              Thêm nguyên liệu
+            </button>
+          </div>
+          <button type="submit" className="mt-4 w-full p-2 bg-green-500 text-white rounded-md">
+            Thêm sản phẩm
           </button>
         </form>
       </div>
     </main>
   );
 }
-

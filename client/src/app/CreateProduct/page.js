@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -11,28 +11,32 @@ export default function AddProduct() {
   const [category, setProductType] = useState('');
   const [recipe, setRecipe] = useState([{ ingredient: '', quantity: '' }]);
   const [errors, setErrors] = useState({});
+  const [ingredients, setIngredients] = useState([]);
   const router = useRouter();
   const productTypes = ['Đồ uống', 'Đồ ăn vặt'];
-  const [ingredients, setIngredients] = useState([]);
-  // const ingredients = ['Ingredient1', 'Ingredient2', 'Ingredient3']; // Example ingredient list
 
   const fetchIngredients = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
       if (response.status !== 200) {
-        toast.error('Lấy sản phẩm thất bại');
+        toast.error('Lấy nguyên liệu thất bại');
         return;
       }
       const data = await response.json();
-      setIngredients(data.ingredients);
+      if (data.ingredients) {
+        setIngredients(data.ingredients);
+      } else {
+        toast.error('Dữ liệu nguyên liệu không hợp lệ');
+      }
     } catch (error) {
-      toast.error('Error fetching products:', error);
+      toast.error('Error fetching ingredients');
     }
   };
 
-  useEffect( () => {
+  useEffect(() => {
     fetchIngredients();
-  }, [])
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +51,7 @@ export default function AddProduct() {
       ingredient: formData.get(`ingredient_${index}`),
       quantity: formData.get(`quantity_${index}`)
     }));
+
     // Clear previous errors
     setErrors({});
 
@@ -96,14 +101,12 @@ export default function AddProduct() {
       });
 
       const data = await response.json();
-      console.log(data);
 
-      if (response.status === 200) {
+      if (response.ok) {
         toast.success('Thêm sản phẩm thành công');
         router.push('/ProductManager');
-      } else { 
+      } else {
         toast.error(data.message || 'Thêm sản phẩm thất bại');
-
       }
     } catch (error) {
       toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
@@ -127,10 +130,8 @@ export default function AddProduct() {
 
   return (
     <main className='min-h-screen w-full bg-white text-black'>
-      {console.log(ingredients)}
       <div className="max-w-md mx-auto mt-10">
         <h1 className="text-2xl font-bold mb-4">Thêm sản phẩm</h1>
-        {console.log(ingredients)}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Tên sản phẩm</label>
@@ -198,11 +199,15 @@ export default function AddProduct() {
                     className="mr-2 p-2 border border-gray-300 rounded-md shadow-sm"
                   >
                     <option value="" disabled>Chọn nguyên liệu</option>
-                    {ingredients.map((ingredient) => (
-                      <option key={ingredient._id} value={ingredient._id}>
-                        {ingredient.name}
-                      </option>
-                    ))}
+                    {ingredients && ingredients.length > 0 ? (
+                      ingredients.map((ingredient) => (
+                        <option key={ingredient._id} value={ingredient._id}>
+                          {ingredient.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Không có nguyên liệu</option>
+                    )}
                   </select>
                   <input
                     name={`quantity_${index}`}
@@ -235,8 +240,8 @@ export default function AddProduct() {
               Thêm nguyên liệu
             </button>
           </div>
-          <button type="submit" className="bg-green-500 text-white p-2 rounded-md">
-            Lưu
+          <button type="submit" className="mt-4 w-full p-2 bg-green-500 text-white rounded-md">
+            Thêm sản phẩm
           </button>
         </form>
       </div>

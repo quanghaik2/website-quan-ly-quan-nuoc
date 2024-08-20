@@ -135,11 +135,16 @@ class Statistics {
             });
          });
 
+         console.log(
+            '🚀 ~ Statistics ~ newStorageImport.forEach ~ newStorageImport:',
+            newStorageImport
+         );
          newStorageImport.forEach((item) => {
             storage.forEach((storageItem) => {
                if (
-                  item.ingredient._id.toString() ==
-                  storageItem.ingredient._id.toString()
+                  item.ingredient._id.toString() ===
+                     storageItem.ingredient._id.toString() &&
+                  item.quantity - storageItem.quantity > 0
                ) {
                   ingredients.push({
                      ingredient: item.ingredient,
@@ -148,6 +153,7 @@ class Statistics {
                }
             });
          });
+
          const cost = newStorageImport.reduce((total, item) => {
             return total + item.quantity * item.ingredient.price;
          }, 0);
@@ -158,6 +164,7 @@ class Statistics {
          return res.status(200).json({
             stats,
             ingredients,
+            ingredientsImport: newStorageImport,
          });
       } catch (error) {
          next(error);

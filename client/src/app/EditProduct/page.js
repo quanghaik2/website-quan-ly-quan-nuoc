@@ -10,11 +10,11 @@ const EditProduct = () => {
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('');
   const [recipe, setRecipe] = useState([{ ingredient: '', quantity: '' }]);
-  const [errors, setErrors] = useState({});
-  const [ingredients, setIngredients] = useState([]);
   const searchParams = useSearchParams();
+  const [errors, setErrors] = useState({});
   const router = useRouter();
   const productTypes = ['Đồ uống', 'Đồ ăn vặt'];
+  const [ingredients, setIngredients] = useState([]);
   const id = searchParams.get('id');
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const EditProduct = () => {
         const ingredientResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
         const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/getProduct?id=${id}`);
 
-        if (!productResponse.ok || !ingredientResponse.ok) {
-          toast.error('Lấy sản phẩm hoặc nguyên liệu thất bại');
+        if (productResponse.status !== 200) {
+          toast.error('Lấy sản phẩm thất bại');
           return;
         }
 
@@ -42,18 +42,14 @@ const EditProduct = () => {
       }
     };
 
-    if (id) {
-      fetchProduct();
-    } else {
-      toast.error('ID sản phẩm không hợp lệ');
-    }
+    fetchProduct();
   }, [id]);
 
   const handleRecipeChange = (index, field, value) => {
     const newRecipe = [...recipe];
     if (field === 'ingredient') {
-      const ingredient = ingredients.find(ing => ing.name === value);
-      newRecipe[index].ingredient = ingredient ? ingredient._id : '';
+      const ingredient = ingredients.find(ingredient => ingredient.name === value);
+      newRecipe[index][field] = ingredient ? ingredient._id : '';
     } else {
       newRecipe[index][field] = value;
     }
@@ -68,9 +64,15 @@ const EditProduct = () => {
     setRecipe(recipe.filter((_, i) => i !== index));
   };
 
-  const validateForm = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Xóa lỗi trước đó
+    setErrors({});
+
+    // Kiểm tra lỗi
     const newErrors = {};
-    if (!productName.trim()) {
+    if (!productName) {
       newErrors.productName = 'Tên sản phẩm không được để trống';
     }
     if (!/^\d+$/.test(price) || price <= 0) {
@@ -79,12 +81,13 @@ const EditProduct = () => {
     if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image)) {
       newErrors.image = 'Ảnh sản phẩm phải hợp lệ';
     }
-    if (!category.trim()) {
+    if (!category) {
       newErrors.category = 'Loại sản phẩm không được để trống';
     }
 
+    // Kiểm tra lỗi nguyên liệu
     recipe.forEach((item, index) => {
-      if (!item.ingredient.trim()) {
+      if (!item.ingredient) {
         newErrors[`ingredient_${index}`] = 'Nguyên liệu không được để trống';
       }
       if (!item.quantity || item.quantity <= 0) {
@@ -92,21 +95,22 @@ const EditProduct = () => {
       }
     });
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    try {
-      const updatedRecipe = recipe.map(item => ({
+    // Tìm ingredientId dựa trên ingredient.name
+    const updatedRecipe = recipe.map(item => {
+      const ingredient = ingredients.find(ing => ing.name === item.ingredient);
+      return {
+        ingredientId: ingredient ? ingredient._id : '',
         ingredient: item.ingredient,
         quantity: item.quantity,
-      }));
+      };
+    });
 
+    try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/update/${id}`, {
         method: 'PUT',
         headers: {
@@ -115,11 +119,12 @@ const EditProduct = () => {
         body: JSON.stringify({ productName, price, category, image, recipe: updatedRecipe }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (response.status === 200) {
         toast.success('Sửa sản phẩm thành công');
         router.push('/ProductManager');
       } else {
-        const data = await response.json();
         toast.error(data.message || 'Sửa sản phẩm thất bại');
       }
     } catch (error) {
@@ -238,25 +243,20 @@ const EditProduct = () => {
             >
               Thêm nguyên liệu
             </button>
-            </div>
-          <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
-              Lưu thay đổi
-            </button>
           </div>
+          <button type="submit" className="bg-green-500 text-white p-2 rounded-md">
+            Lưu
+          </button>
         </form>
       </div>
     </main>
   );
 };
 
-export default function Page() {
-  return (
-    <Suspense fallback={<div>Đang tải...</div>}>
-      <EditProduct />
-    </Suspense>
-  );
-}
+const EditProductPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EditProduct />
+  </Suspense>
+);
+
+export default EditProductPage;

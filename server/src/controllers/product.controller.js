@@ -24,18 +24,10 @@ class Product {
    updateProduct = async (req, res, next) => {
       try {
          const { id } = req.params;
-         const { productName, price, category, image, recipe } = req.body;
-
-         if (!productName || !price || !category || !image || !recipe) {
-            return res
-               .status(400)
-               .json({ message: 'Chưa nhập đầy đủ thông tin sản phẩm' });
-         }
 
          const updatedProduct = await models.product.findByIdAndUpdate(
             id,
-            { productName, price, category, image, recipe },
-            { new: true }
+            req.body
          );
 
          if (!updatedProduct) {

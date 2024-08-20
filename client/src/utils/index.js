@@ -23,8 +23,35 @@ const convertDateFormat = (mongoDate) => {
     return `${day}/${month}/${year}`;
 }
 
+const mergeRecipes = (products) => {
+    const mergedRecipes = {};
+  
+    products.forEach((product) => {
+        product.recipe.forEach((item) => {
+          // Tính lại quantity của ingredient trong recipe dựa trên quantity của sản phẩm
+          const adjustedQuantity = item.quantity * product.quantity;
+          const ingredientId = item.ingredient._id;
+    
+          if (mergedRecipes[ingredientId]) {
+            // Nếu ingredient đã tồn tại, cộng thêm quantity đã được tính lại
+            mergedRecipes[ingredientId].quantity += adjustedQuantity;
+          } else {
+            // Nếu ingredient chưa tồn tại, thêm mới vào mảng kết quả
+            mergedRecipes[ingredientId] = {
+                ingredient: item.ingredient._id,
+                quantity: adjustedQuantity,
+            };
+          }
+        });
+      });
+  
+    // Chuyển từ object sang mảng
+    return Object.values(mergedRecipes);
+  };
+
 export default {
     getDateNow,
     checkIdTable,
     convertDateFormat,
+    mergeRecipes,
 }

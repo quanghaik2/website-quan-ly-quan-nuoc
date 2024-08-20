@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ListProductPage from '@/components/ListProducts';
 import { toast } from 'sonner';
+import utils from '@/utils';
 
 const CreateOrder = () => {
   const router = useRouter();
@@ -66,40 +67,59 @@ const CreateOrder = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/create`, {
+      
+       
+      const response2 = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/storage`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          tableId,
-          note,
-          products: products.map(product => ({
-            productId: product.id,
-            quantity: product.quantity,
-            nameProduct: product.name,
-            price: product.price
-          })),
-          total_amount: totalAmount
+          status: 'out',
+          recipe: utils.mergeRecipes(products),
          }),
       });
+     
+      const data2 = await response2.json();
 
-      const data = await response.json();
-      console.log(data);
-
-      if (response.status  === 200) {
-        toast.success('Thêm sản phẩm thành công');
-        router.push('/OrderManager');
-      } else {
-        toast.error(data.message || 'Thêm sản phẩm thất bại');
+      console.log({data2, recipe: utils.mergeRecipes(products)})
+      if(response2.status !== 200){
+        toast.error('sản phẩm không thể phục vụ');
+      }else{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/order/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            tableId,
+            note,
+            products: products.map(product => ({
+              productId: product.id,
+              quantity: product.quantity,
+              nameProduct: product.name,
+              price: product.price
+            })),
+            total_amount: totalAmount
+           }),
+        });
+        const data = await response.json();
+        if (response.status  === 200 ) {
+          toast.success('Thêm sản phẩm thành công');
+          router.push('/OrderManager');
+        } else {
+          toast.error(data.message || 'Thêm sản phẩm thất bại');
+        }
       }
+      
     } catch (error) {
-      toast.error(error + 'Có lỗi xảy ra. Vui lòng thử lại.');
+      toast.error(error + 'Có lỗi xảy ra. Vui lòng thử lại.' + `${products.length > 0 ? 'có production' : 'không có production'}`);
     }
   };
 
   return (
     <div className="w-full text-black mx-auto bg-white shadow-lg rounded-lg relative">
+      {console.log(utils.mergeRecipes(products))}
       {showListOrder && (
         <div className="absolute inset-0">
           <ListProductPage
@@ -217,3 +237,12 @@ const CreateOrderPage = () => (
 )
 
 export default CreateOrderPage;
+
+
+
+
+
+
+
+
+

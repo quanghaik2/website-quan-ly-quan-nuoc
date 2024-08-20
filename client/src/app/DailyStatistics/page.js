@@ -74,30 +74,50 @@ const DailyStatisticsPage = () => {
           <div className="mt-10">
             <h2 className="text-xl font-bold mb-4">Thống kê từ {startDate} đến {endDate}</h2>
 
-            <h3 className="text-lg font-bold mb-2">Bảng nhập nguyên liệu</h3>
+            <h3 className="text-lg font-bold mt-4 mb-2">Nguyên liệu đã nhập</h3>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border border-gray-300">Tên nguyên liệu</th>
-                  <th className="px-4 py-2 border border-gray-300">Số lượng nhập</th>
+                  <th className="px-4 py-2 border border-gray-300">Số lượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                {statistics.ingredientsImport.map((item, index) => (
+                  <tr key={index}>
+                     <td className="px-4 py-2 border border-gray-300">{item.ingredient.name}</td>
+                     <td className="px-4 py-2 border border-gray-300">{`${item.quantity} ${item.ingredient.unit}` } </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <h3 className="text-lg font-bold mb-2">Bảng nguyên liệu đã sử dụng</h3>
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 border border-gray-300">Tên nguyên liệu</th>
+                  <th className="px-4 py-2 border border-gray-300">Số lượng đã dùng</th>
+
                 </tr>
               </thead>
               <tbody>
                 {statistics.ingredients.map((item, index) => (
                   <tr key={index}>
                     <td className="px-4 py-2 border border-gray-300">{item.ingredient.name}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.quantity}</td>
+                    <td className="px-4 py-2 border border-gray-300">{`${item.quantity} ${item.ingredient.unit}` } </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <h3 className="text-lg font-bold mt-4 mb-2">Bảng xuất nguyên liệu</h3>
+            
+
+            <h3 className="text-lg font-bold mt-4 mb-2">Bảng số món đã bán</h3>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
-                  <th className="px-4 py-2 border border-gray-300">Tên sản phẩm</th>
-                  <th className="px-4 py-2 border border-gray-300">Số lượng xuất</th>
+                  <th className="px-4 py-2 border border-gray-300">Tên món</th>
+                  <th className="px-4 py-2 border border-gray-300">Số lượng đã bán</th>
                 </tr>
               </thead>
               <tbody>
@@ -125,24 +145,6 @@ const DailyStatisticsPage = () => {
                   <td className="px-4 py-2 border border-gray-300">{statistics.stats.cost}</td>
                   <td className="px-4 py-2 border border-gray-300">{statistics.stats.profit}</td>
                 </tr>
-              </tbody>
-            </table>
-
-            <h3 className="text-lg font-bold mt-4 mb-2">Bảng số món đã bán</h3>
-            <table className="min-w-full bg-white border border-gray-300">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border border-gray-300">Tên món</th>
-                  <th className="px-4 py-2 border border-gray-300">Số lượng đã bán</th>
-                </tr>
-              </thead>
-              <tbody>
-                {statistics.stats.items.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2 border border-gray-300">{item.name}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.quantity}</td>
-                  </tr>
-                ))}
               </tbody>
             </table>
           </div>

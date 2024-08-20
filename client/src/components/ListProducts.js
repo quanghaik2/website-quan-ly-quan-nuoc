@@ -35,20 +35,20 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
     };
   }, [onClose]);
 
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080'); // Đảm bảo URL này đúng với server của bạn
+  // useEffect(() => {
+  //   const ws = new WebSocket('ws://localhost:8080'); // Đảm bảo URL này đúng với server của bạn
  
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.action === 'productUpdate') {
-        setProducts((prevProducts) => [...prevProducts, data.product]);
-      }
-    };
+  //   ws.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     if (data.action === 'productUpdate') {
+  //       setProducts((prevProducts) => [...prevProducts, data.product]);
+  //     }
+  //   };
  
-    return () => {
-      ws.close();
-    };
-  }, []);
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
 
   const handleProductClick = (product) => {
     const newProduct = {
@@ -56,7 +56,8 @@ const ListProductPage = ({ onClose, onProductSelect }) => {
       name: product.productName,
       price: product.price,
       quantity: 1,
-      totalPrice: product.price
+      totalPrice: product.price,
+      recipe: product.recipe,
     };
     onProductSelect(newProduct);
   };

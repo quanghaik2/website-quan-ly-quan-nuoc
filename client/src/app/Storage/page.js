@@ -78,7 +78,7 @@ const CreateStorageStatisticPage = () => {
 
       if (response.status === 200) {
         toast.success('Thống kê kho được tạo thành công');
-        router.push('/storageStatistic');
+        router.push('/Statistics');
       } else {
         toast.error(data.message || 'Tạo thống kê kho thất bại');
       }

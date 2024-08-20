@@ -22,15 +22,18 @@ const EditProduct = () => {
       try {
         const ingredientResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`);
         const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/product/getProduct?id=${id}`);
-
+  
         if (productResponse.status !== 200) {
           toast.error('Lấy sản phẩm thất bại');
           return;
         }
-
+  
         const productData = await productResponse.json();
         const ingredientData = await ingredientResponse.json();
-
+  
+        console.log("Product Data:", productData);  // Kiểm tra dữ liệu sản phẩm
+        console.log("Ingredient Data:", ingredientData);  // Kiểm tra dữ liệu nguyên liệu
+  
         setProductName(productData.product.productName);
         setProductPrice(productData.product.price);
         setImage(productData.product.image);
@@ -41,9 +44,11 @@ const EditProduct = () => {
         toast.error('Có lỗi xảy ra khi lấy thông tin sản phẩm');
       }
     };
-
+  
     fetchProduct();
   }, [id]);
+  
+  
 
   const handleRecipeChange = (index, field, value) => {
     const newRecipe = [...recipe];

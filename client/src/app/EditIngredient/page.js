@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
 import { Suspense, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useSearchParams, useRouter } from 'next/navigation';
 
- function EditIngredient() {
+function EditIngredient() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
@@ -14,17 +14,16 @@ import { useSearchParams, useRouter } from 'next/navigation';
   const id = searchParams.get('id');
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchIngredient = async () => {
       try {
         const ingredientResponse = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient/${id}`);
 
         if (ingredientResponse.status !== 200) {
-          toast.error('Lấy sản phẩm thất bại');
+          toast.error('Lấy thông tin nguyên liệu thất bại');
           return;
         }
 
         const ingredientData = await ingredientResponse.json();
-        console.log(ingredientData);
         setName(ingredientData.ingredient.name);
         setPrice(ingredientData.ingredient.price);
         setUnit(ingredientData.ingredient.unit);
@@ -33,7 +32,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
       }
     };
 
-    fetchProduct();
+    fetchIngredient();
   }, [id]);
 
   const handleSubmit = async (e) => {
@@ -44,19 +43,19 @@ import { useSearchParams, useRouter } from 'next/navigation';
     const price = formData.get('price');
     const unit = formData.get('unit');
 
-    // Clear previous errors
+    // Xóa lỗi cũ
     setErrors({});
 
     // Validation
     const newErrors = {};
     if (!name || name.length > 40) {
-      newErrors.name = 'Tên nguyên liệu không hợp lệ';
+      newErrors.name = 'Tên nguyên liệu không hợp lệ (tối đa 40 ký tự)';
     }
-    if (!/^\d+$/.test(price) ||  price <= 0) {
-      newErrors.price = 'Giá nguyên liệu phải hợp lệ';
+    if (!/^\d+$/.test(price) || price <= 0) {
+      newErrors.price = 'Giá nguyên liệu phải hợp lệ và lớn hơn 0';
     }
-    if (!unit || unit.length >15 ) {
-      newErrors.unit = 'Đơn vị không không hợp lệ';
+    if (!unit || unit.length > 15) {
+      newErrors.unit = 'Đơn vị không hợp lệ (tối đa 15 ký tự)';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -65,7 +64,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ingredient/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -74,14 +73,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (response.status === 200) {
-        toast.success('Thêm nguyên liệu thành công');
+        toast.success('Cập nhật nguyên liệu thành công');
         router.push('/IngredientManager');
-        // Thực hiện hành động sau khi thêm thành công, ví dụ: chuyển hướng
       } else {
-        toast.error(data.message || 'Thêm nguyên liệu thất bại');
+        toast.error(data.message || 'Cập nhật nguyên liệu thất bại');
       }
     } catch (error) {
       toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
@@ -89,9 +86,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
   };
 
   return (
-    <main className='size-full bg-white h-dvh text-black'>
+    <main className='min-h-screen w-full bg-white text-black'>
       <div className="max-w-md mx-auto mt-10">
-        <h1 className="text-2xl font-bold mb-4">Thêm Nguyên Liệu</h1>
+        <h1 className="text-2xl font-bold mb-4">Chỉnh sửa Nguyên Liệu</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Tên nguyên liệu</label>

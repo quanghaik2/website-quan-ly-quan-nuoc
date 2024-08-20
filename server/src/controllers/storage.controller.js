@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongoose');
 const models = require('../models');
 
 class StatisticStorage {
@@ -17,23 +18,29 @@ class StatisticStorage {
 
          if (status === 'out') {
             for (let item of recipe) {
-               const isExist = await models.storage.findOne({
-                  ingredient: item.ingredient,
-               });
+               const isExist = await models.storage
+                  .findOne({
+                     ingredient: item.ingredient,
+                  })
+                  .populate('ingredient');
 
                if (!isExist) {
                   return res.status(400).json({
-                     message: 'Ingredient not found: ' + item.ingredient.name,
+                     message:
+                        'Ingredient ID not found in storage: ' +
+                        item.ingredient,
                   });
                }
                if (isExist.quantity < item.quantity) {
                   return res.status(400).json({
-                     message: 'Not enough quantity: ' + isExist.ingredient.name,
+                     message:
+                        'Not enough quantity of ID in storage: ' +
+                        item.ingredient,
                   });
                }
                if (isExist.quantity === 0) {
                   return res.status(400).json({
-                     message: 'Out of stock: ' + isExist.ingredient.name,
+                     message: `Out of stock ID in storage: ${item.ingredient}`,
                   });
                }
             }

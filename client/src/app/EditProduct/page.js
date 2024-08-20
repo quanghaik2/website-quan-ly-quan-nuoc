@@ -67,10 +67,10 @@ const EditProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
+    // Xóa lỗi trước đó
     setErrors({});
 
-    // Validation
+    // Kiểm tra lỗi
     const newErrors = {};
     if (!productName) {
       newErrors.productName = 'Tên sản phẩm không được để trống';
@@ -85,7 +85,7 @@ const EditProduct = () => {
       newErrors.category = 'Loại sản phẩm không được để trống';
     }
 
-    // Validate recipe
+    // Kiểm tra lỗi nguyên liệu
     recipe.forEach((item, index) => {
       if (!item.ingredient) {
         newErrors[`ingredient_${index}`] = 'Nguyên liệu không được để trống';
@@ -100,7 +100,7 @@ const EditProduct = () => {
       return;
     }
 
-    // Update recipe with ingredient IDs
+    // Tìm ingredientId dựa trên ingredient.name
     const updatedRecipe = recipe.map(item => {
       const ingredient = ingredients.find(ing => ing.name === item.ingredient);
       return {

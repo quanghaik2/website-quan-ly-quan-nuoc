@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function EditIngredient() {
+ function EditIngredient() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [unit, setUnit] = useState('');
@@ -143,3 +143,11 @@ export default function EditIngredient() {
     </main>
   );
 }
+
+const EditIngredientPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EditIngredient />
+  </Suspense>
+);
+
+export default EditIngredientPage;

@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 const DailyStatisticsPage = () => {
-    const currentDate = new Date();
-    const start = new Date(currentDate);
-    const end = new Date(currentDate);
-    end.setDate(start.getDate() + 1);
+  const currentDate = new Date();
+  const start = new Date(currentDate);
+  const end = new Date(currentDate);
+  end.setDate(start.getDate() + 1);
   
-    const [startDate, setStartDate] = useState(start.toISOString().split('T')[0]); // Định dạng YYYY-MM-DD
-    const [endDate, setEndDate] = useState(end.toISOString().split('T')[0]);
+  const [startDate, setStartDate] = useState(start.toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(end.toISOString().split('T')[0]);
   const [statistics, setStatistics] = useState(null);
   const router = useRouter();
 
@@ -72,47 +72,26 @@ const DailyStatisticsPage = () => {
 
         {statistics && (
           <div className="mt-10">
-            <h2 className="text-xl font-bold mb-4">Thống kê từ {startDate} đến {endDate}</h2>
 
-            <h3 className="text-lg font-bold mt-4 mb-2">Nguyên liệu đã nhập</h3>
-            <table className="min-w-full bg-white border border-gray-300">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border border-gray-300">Tên nguyên liệu</th>
-                  <th className="px-4 py-2 border border-gray-300">Số lượng</th>
-                </tr>
-              </thead>
-              <tbody>
-                {statistics.ingredientsImport.map((item, index) => (
-                  <tr key={index}>
-                     <td className="px-4 py-2 border border-gray-300">{item.ingredient.name}</td>
-                     <td className="px-4 py-2 border border-gray-300">{`${item.quantity} ${item.ingredient.unit}` } </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <h3 className="text-lg font-bold mb-2">Bảng nguyên liệu đã sử dụng</h3>
+            <h3 className="text-lg font-bold mt-4 mb-2">Nguyên liệu đã sử dụng</h3>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border border-gray-300">Tên nguyên liệu</th>
                   <th className="px-4 py-2 border border-gray-300">Số lượng đã dùng</th>
-
                 </tr>
               </thead>
               <tbody>
                 {statistics.ingredients.map((item, index) => (
                   <tr key={index}>
                     <td className="px-4 py-2 border border-gray-300">{item.ingredient.name}</td>
-                    <td className="px-4 py-2 border border-gray-300">{`${item.quantity} ${item.ingredient.unit}` } </td>
+                    <td className="px-4 py-2 border border-gray-300">{`${item.quantity} ${item.ingredient.unit}`}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            
-
-            <h3 className="text-lg font-bold mt-4 mb-2">Bảng số món đã bán</h3>
+            <h3 className="text-lg font-bold mt-4 mb-2">Món đã bán</h3>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
@@ -130,7 +109,7 @@ const DailyStatisticsPage = () => {
               </tbody>
             </table>
 
-            <h3 className="text-lg font-bold mt-4 mb-2">Bảng doanh thu</h3>
+            <h3 className="text-lg font-bold mt-4 mb-2">Doanh thu</h3>
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr>
@@ -153,11 +132,5 @@ const DailyStatisticsPage = () => {
     </main>
   );
 };
-
-// const DailyStatisticsPage = () => (
-//   <Suspense fallback={<div>Loading...</div>}>
-//     <DailyStatistics />
-//   </Suspense>
-// );
 
 export default DailyStatisticsPage;
